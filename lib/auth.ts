@@ -4,7 +4,9 @@ import { prisma } from "./prisma";
 export async function getSession() {
   const cookieStore = await cookies();
   const token = cookieStore
-    .get("better-auth.session_token")
+    .get(
+      `${process.env.NODE_ENV === "development" ? "" : "__Secure-"}better-auth.session_token`,
+    )
     ?.value.split(".")[0];
   if (!token) return null;
 

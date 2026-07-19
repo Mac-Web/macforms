@@ -4,6 +4,7 @@ import Link from "next/link";
 
 async function Nav() {
   const session = await getSession();
+  console.log(process.env.NODE_ENV);
 
   return (
     <nav className="text-white flex gap-x-3 items-center px-10">
