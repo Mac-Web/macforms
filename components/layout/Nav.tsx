@@ -6,19 +6,20 @@ async function Nav() {
   const session = await getSession();
 
   return (
-    <nav>
+    <nav className="text-white flex gap-x-3 items-center px-10">
       <Link href="/">MacForms</Link>
       <Link href="/create">Create</Link>
       <Link href="/forms">Forms</Link>
       <Link href="/settings">Settings</Link>
       {session && (
-        <div>
+        <div className="text-white">
           <Image
             src={session.user.image || ""}
             alt="Avatar"
             width={50}
             height={50}
           />
+          {session.user.name}
         </div>
       )}
     </nav>
