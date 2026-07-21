@@ -9,14 +9,14 @@ function NavSearch() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const clickListener = (e: MouseEvent) => {
+    const clickHandler = (e: MouseEvent) => {
       setSearching(
         containerRef.current?.contains(e.target as Node) ? true : false,
       );
     };
-    document.addEventListener("click", clickListener);
+    document.addEventListener("click", clickHandler);
     return () => {
-      document.removeEventListener("click", clickListener);
+      document.removeEventListener("click", clickHandler);
     };
   }, []);
 
