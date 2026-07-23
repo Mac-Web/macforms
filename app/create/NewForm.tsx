@@ -22,7 +22,14 @@ function NewForm() {
     description: "",
     private: false,
     open: true,
-    questions: [{ id: 0, title: "", type: "choice" }],
+    questions: [
+      {
+        id: 0,
+        title: "",
+        type: "multiple",
+        choices: [{ id: crypto.randomUUID(), text: "" }],
+      },
+    ],
   });
 
   function generateCode(): string {
@@ -159,7 +166,12 @@ function NewForm() {
               ...prev,
               questions: [
                 ...prev.questions,
-                { id: prev.questions.length, title: "", type: "choice" },
+                {
+                  id: prev.questions.length,
+                  title: "",
+                  type: "multiple",
+                  choices: [{ id: crypto.randomUUID(), text: "" }],
+                },
               ],
             };
           })

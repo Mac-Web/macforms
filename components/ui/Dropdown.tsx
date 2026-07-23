@@ -53,7 +53,7 @@ function Dropdown({
                 setSelected(v);
                 setMenuOpen(false);
               }}
-              className="p-2 hover:bg-gray-900 rounded cursor-pointer"
+              className={`p-2 hover:bg-gray-900 rounded cursor-pointer ${selected === v && "font-bold text-green-500"}`}
             >
               {v}
             </div>

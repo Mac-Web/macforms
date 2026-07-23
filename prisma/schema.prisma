@@ -7,6 +7,11 @@ datasource db {
   provider = "postgresql"
 }
 
+enum QuestionType {
+  multiple
+  text
+}
+
 model User {
   id            String    @id
   name          String
@@ -19,6 +24,7 @@ model User {
   picture       Int?
   accounts      Account[]
   sessions      Session[]
+  forms         Form[]
 
   @@map("user")
 }
@@ -71,8 +77,27 @@ model Verification {
 }
 
 model Form {
-  id        String   @id
-  text      String
+  id          String     @id
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  private     Boolean    @default(false)
+  code        String?
+  open        Boolean    @default(true)
+  questions   Question[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Question {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String?
+  optional    Boolean      @default(false)
+  type        QuestionType
+  config      Json
+  formId      String
+  form        Form         @relation(fields: [formId], references: [id], onDelete: Cascade)
 }

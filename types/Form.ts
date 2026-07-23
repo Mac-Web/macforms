@@ -9,10 +9,30 @@ export interface FormType {
   questions: QuestionType[];
 }
 
-export interface QuestionType {
-  id: number;
-  title: string;
-  description?: string;
-  optional?: boolean;
-  type: "choice" | "multiple" | "short" | "long";
+export type QuestionTypeMap = {
+  multiple: {
+    choices: ChoiceType[];
+    multiple?: boolean;
+  };
+  text: {
+    placeholder: string;
+    long?: boolean;
+  };
+};
+
+export type Question = keyof QuestionTypeMap;
+
+export type QuestionType = {
+  [K in Question]: {
+    id: number;
+    title: string;
+    description?: string;
+    optional?: boolean;
+    type: K;
+  } & QuestionTypeMap[K];
+}[Question];
+
+export interface ChoiceType {
+  id: string;
+  text: string;
 }
