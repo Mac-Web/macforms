@@ -97,8 +97,18 @@ function Question({ index, question, setQuestion }: QuestionProps) {
                     const choices = [...question.choices];
                     choices[choices.findIndex((c) => c.id === value.id)] =
                       value;
-                    return setQuestion({ ...question, choices });
+                    setQuestion({ ...question, choices });
                   }}
+                  removeChoice={
+                    question.choices.length == 1
+                      ? null
+                      : () => {
+                          const choices = question.choices
+                            .slice(0, i)
+                            .concat(question.choices.slice(i + 1));
+                          setQuestion({ ...question, choices });
+                        }
+                  }
                 />
               ))}
             <Btn

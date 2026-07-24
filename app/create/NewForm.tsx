@@ -5,6 +5,8 @@ import { useState } from "react";
 import { labelStyles } from "@/lib/constants";
 import { FaShuffle } from "react-icons/fa6";
 import { FaPlusCircle } from "react-icons/fa";
+import { createForm } from "./actions";
+import { useRouter } from "next/navigation";
 import Input from "@/components/ui/Input";
 import Textarea from "@/components/ui/Textarea";
 import Checkbox from "@/components/ui/Checkbox";
@@ -14,6 +16,7 @@ import Question from "./Question";
 const alphabet = "qwertyuiopasdfghjklzxcvbnm1234567890".split("");
 
 function NewForm() {
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [newForm, setNewForm] = useState<FormType>({
     id: "",
@@ -31,6 +34,7 @@ function NewForm() {
       },
     ],
   });
+  const router = useRouter();
 
   function generateCode(): string {
     return new Array(6)
@@ -40,10 +44,43 @@ function NewForm() {
       .toUpperCase();
   }
 
-  function handleSave() {
+  async function handleSave() {
     setLoading(true);
-    console.log(newForm);
-    setLoading(false);
+    setError(null);
+    function invalid(message: string) {
+      setError(message);
+      setLoading(false);
+    }
+    if (newForm.title.trim().length == 0) {
+      return invalid("Please give your form a title");
+    }
+    if (newForm.private && (!newForm.code || newForm.code.trim().length == 0)) {
+      return invalid("Please generate an access code for the private form");
+    }
+    for (let i = 0; i < newForm.questions.length; i++) {
+      const question = newForm.questions[i];
+      if (question.title.trim().length == 0) {
+        return invalid(`Please give question ${i + 1} a title`);
+      }
+      if (question.type === "text" && question.placeholder.trim().length == 0) {
+        return invalid(`Please give question ${i + 1}'s input a placeholder`);
+      }
+      if (question.type === "multiple" && question.choices.length == 0) {
+        return invalid(`Please add at least one option for question ${i + 1}`);
+      }
+      if (
+        question.type === "multiple" &&
+        question.choices.some((c) => c.text.trim().length == 0)
+      ) {
+        return invalid(`Please fill in all the options for question ${i + 1}`);
+      }
+    }
+    const formId = await createForm(newForm);
+    if (formId) {
+      router.push(`/forms/${formId}`);
+    } else {
+      setLoading(false);
+    }
   }
 
   return (
@@ -170,7 +207,7 @@ function NewForm() {
                   id: prev.questions.length,
                   title: "",
                   type: "multiple",
-                  choices: [{ id: crypto.randomUUID(), text: "" }],
+                  choices: [{ id: crypto?.randomUUID(), text: "" }],
                 },
               ],
             };
@@ -180,10 +217,11 @@ function NewForm() {
         <FaPlusCircle size={25} />
         Add question
       </div>
+      {error && <div className="text-red-500 text-sm">{error}</div>}
       <Btn
         text={loading ? "Loading..." : "Save"}
         onclick={handleSave}
-        styles="mt-5"
+        styles={error ? "" : "mt-5"}
         primary
       />
     </div>

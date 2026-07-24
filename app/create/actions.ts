@@ -9,9 +9,28 @@ export async function createForm(formData: FormType) {
     const session = await getSession();
     if (session) {
       const newForm = await prisma.form.create({
-        data: { ...formData, questions: undefined }, //TODO: make this work
+        data: {
+          ...formData,
+          id: undefined,
+          userId: session.user.id,
+          questions: {
+            create: formData.questions.map((q) => {
+              const { title, description, optional, type } = q;
+              return {
+                title,
+                description,
+                optional,
+                type,
+                config:
+                  type === "text"
+                    ? JSON.stringify({ placeholder: q.placeholder })
+                    : JSON.stringify({ choices: q.choices }),
+              };
+            }),
+          },
+        },
       });
-      console.log(newForm);
+      return newForm.id;
     }
   } catch (err) {
     console.error("Error: " + err);
