@@ -14,14 +14,18 @@ export default async function Home() {
       />
       <Btn
         text={session ? "Get started" : "Sign in"}
-        link={session ? "/create" : "https://macweb.app/?redirect=macforms"}
+        link={
+          session
+            ? "/create"
+            : process.env.NEXT_PUBLIC_ROOT_DOMAIN + "?redirect=macforms"
+        }
         styles={"block mb-10"}
         primary
       />
       <div className="flex flex-col gap-y-10 pb-10">
         <div className="flex flex-col gap-y-10 md:flex-row gap-x-20 items-center">
           <Image
-            src="https://macweb.app/logo.png"
+            src="/logo.png"
             alt="Placeholder image"
             width={200}
             height={200}
@@ -51,7 +55,7 @@ export default async function Home() {
             </p>
           </div>
           <Image
-            src="https://macweb.app/logo.png"
+            src="/logo.png"
             alt="Placeholder image"
             width={200}
             height={200}

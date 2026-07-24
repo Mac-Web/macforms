@@ -1,15 +1,18 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
+import type { User } from "better-auth";
+import NavUser from "./NavUser";
 import Btn from "../ui/Btn";
 
-function User() {
-  const { data: session } = authClient.useSession();
-
-  return session ? (
-    <div>user 123</div>
+function User({ user }: { user: User | undefined }) {
+  return user ? (
+    <NavUser user={user} />
   ) : (
-    <Btn text="Sign in" link="https://macweb.app/?redirect=macforms" primary />
+    <Btn
+      text="Sign in"
+      link={`${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?redirect=macforms`}
+      primary
+    />
   );
 }
 

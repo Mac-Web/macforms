@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  allowedDevOrigins: ["*.macweb.com", "macweb.com"],
 };
 
 export default nextConfig;
