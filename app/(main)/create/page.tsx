@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { getSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import NewForm from "./NewForm";
 
 export const metadata: Metadata = {
@@ -7,7 +9,10 @@ export const metadata: Metadata = {
     "Create, customize, and manage your own form using the MacForms create form page!",
 };
 
-function Page() {
+async function Page() {
+  const session = await getSession();
+  if (!session) redirect("/");
+
   return (
     <div>
       <h1 className="text-3xl text-white text-center font-bold py-10">

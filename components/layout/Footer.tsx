@@ -17,12 +17,7 @@ function Footer() {
           className="flex items-center gap-x-2 text-black dark:text-white text-lg duration-300 pr-5 py-2 font-bold
            hover:text-shadow-gray-400 hover:text-shadow-sm"
         >
-          <Image
-            src="https://macweb.app/logo.png"
-            alt="MacForms Logo"
-            width={35}
-            height={35}
-          />{" "}
+          <Image src="/logo.png" alt="MacForms Logo" width={35} height={35} />{" "}
           MacForms
         </Link>
         <div className="text-gray-800 dark:text-gray-100">

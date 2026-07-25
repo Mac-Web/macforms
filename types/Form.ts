@@ -7,6 +7,16 @@ export interface FormType {
   code?: string;
   open?: boolean;
   questions: QuestionType[];
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface ResponseType {
+  id: string;
+  formId: string;
+  answers: AnswerType[];
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export type QuestionTypeMap = {
@@ -20,7 +30,17 @@ export type QuestionTypeMap = {
   };
 };
 
+export type AnswerTypeMap = {
+  multiple: {
+    choices: string[];
+  };
+  text: {
+    text: string;
+  };
+};
+
 export type Question = keyof QuestionTypeMap;
+export type Answer = keyof AnswerTypeMap;
 
 export type QuestionType = {
   [K in Question]: {
@@ -31,6 +51,14 @@ export type QuestionType = {
     type: K;
   } & QuestionTypeMap[K];
 }[Question];
+
+export type AnswerType = {
+  [K in Answer]: {
+    id: number;
+    questionId: number;
+    type: K;
+  } & AnswerTypeMap[K];
+}[Answer];
 
 export interface ChoiceType {
   id: string;

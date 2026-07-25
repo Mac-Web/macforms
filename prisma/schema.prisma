@@ -86,6 +86,7 @@ model Form {
   code        String?
   open        Boolean    @default(true)
   questions   Question[]
+  responses   Response[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -100,4 +101,27 @@ model Question {
   config      Json
   formId      String
   form        Form         @relation(fields: [formId], references: [id], onDelete: Cascade)
+  answers     Answer[]
+}
+
+model Response {
+  id      String   @id @default(uuid())
+  answers Answer[]
+
+  formId String
+  form   Form   @relation(fields: [formId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Answer {
+  id     Int          @id @default(autoincrement())
+  type   QuestionType
+  config Json
+
+  questionId Int
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  responseId String
+  response   Response @relation(fields: [responseId], references: [id], onDelete: Cascade)
 }
