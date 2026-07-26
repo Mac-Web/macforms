@@ -6,6 +6,7 @@ export async function getFormData(id: string): Promise<FormType | void> {
   try {
     const session = await getSession();
     if (session) {
+      //TODO: only logged in users can fetch form data
       const existingForm = await prisma.form.findUnique({
         where: { id }, //TODO: handle permission sometimes needs to check if session user id matches
         include: { questions: true },

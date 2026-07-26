@@ -7,6 +7,22 @@ export const metadata: Metadata = {
   title: "Create Form | MacForms",
   description:
     "Create, customize, and manage your own form using the MacForms create form page!",
+  authors: [{ name: "MacWeb", url: "https://macweb.app" }],
+  openGraph: {
+    title: "Create Forms | MacForms",
+    description:
+      "Create, customize, and manage your own form using the MacForms create form page!",
+    url: "https://macforms.macweb.app/create",
+    siteName: "MacForms",
+    images: [
+      {
+        url: "/logo.png",
+        width: 100,
+        height: 100,
+      },
+    ],
+    type: "website",
+  },
 };
 
 async function Page() {
@@ -15,7 +31,7 @@ async function Page() {
 
   return (
     <div>
-      <h1 className="text-3xl text-white text-center font-bold py-10">
+      <h1 className="text-4xl text-white text-center font-bold py-10">
         Create Form
       </h1>
       <NewForm />

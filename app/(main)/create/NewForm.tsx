@@ -192,6 +192,17 @@ function NewForm() {
               return { ...prev, questions: newQuestions };
             })
           }
+          handleDelete={
+            newForm.questions.length !== 1
+              ? () =>
+                  setNewForm({
+                    ...newForm,
+                    questions: newForm.questions.filter(
+                      (q) => q.id !== question.id,
+                    ),
+                  })
+              : undefined
+          }
         />
       ))}
       <div

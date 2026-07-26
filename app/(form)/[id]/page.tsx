@@ -1,5 +1,7 @@
 import { getFormData, getResponseData } from "@/lib/forms";
 import { redirect } from "next/navigation";
+import { getSession } from "@/lib/auth";
+import { FaEye, FaXmark } from "react-icons/fa6";
 import Questions from "./Questions";
 import Link from "next/link";
 import Image from "next/image";
@@ -9,13 +11,52 @@ interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-async function Page({ params, searchParams }: PageProps) {
-  const { id } = await params;
+async function fetchFormData(id: string) {
   const formData = await getFormData(id);
   if (!formData) redirect("/");
+  return formData;
+}
+
+export async function generateMetadata({ params }: PageProps) {
+  const { id } = await params;
+  const formData = await fetchFormData(id);
+
+  return {
+    title: `${formData.title} | MacForms`,
+    description:
+      formData.description ||
+      `${formData.title} is an online form created using MacForms, a simple and easy to use form creation tool.`,
+    authors: [{ name: "MacWeb", url: "https://macweb.app" }],
+    openGraph: {
+      title: `${formData.title} | MacForms`,
+      description:
+        formData.description ||
+        `${formData.title} is an online form created using MacForms, a simple and easy to use form creation tool.`,
+      url: `https://macforms.macweb.app/${formData.id}`,
+      siteName: "MacForms",
+      images: [
+        {
+          url: "/logo.png",
+          width: 100,
+          height: 100,
+        },
+      ],
+      type: "website",
+    },
+  };
+}
+
+async function Page({ params, searchParams }: PageProps) {
+  const { id } = await params;
+  const formData = await fetchFormData(id);
+  const session = await getSession();
   const search = await searchParams;
   const responseId = search?.edit as string;
   const response = responseId ? await getResponseData(responseId) : null;
+  const preview =
+    formData.userId === session?.user.id && search?.preview === "true"
+      ? true
+      : false;
 
   return (
     <div className="w-200 mx-auto py-10 flex flex-col gap-y-10 items-center">
@@ -51,6 +92,18 @@ async function Page({ params, searchParams }: PageProps) {
           </a>
         </span>
       </div>
+      {preview && (
+        <div
+          className="bg-gray-950 rounded border-2 border-gray-700 flex items-center gap-x-3 text-gray-300 px-4 py-2 fixed
+        right-3 top-3"
+        >
+          <FaEye size={20} />
+          This is a preview of the form
+          <Link href={`/forms/${formData.id}`}>
+            <FaXmark size={20} title="Go back" />
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

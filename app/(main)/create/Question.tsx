@@ -2,12 +2,16 @@
 
 import type { Question as QType, QuestionType } from "@/types/Form";
 import { labelStyles } from "@/lib/constants";
+import { useState } from "react";
+import { FaTrash } from "react-icons/fa";
+import { AnimatePresence } from "framer-motion";
 import Input from "@/components/ui/Input";
 import Textarea from "@/components/ui/Textarea";
 import Dropdown from "@/components/ui/Dropdown";
 import Choice from "@/components/create/Choice";
 import Btn from "@/components/ui/Btn";
 import Checkbox from "@/components/ui/Checkbox";
+import WarningModal from "@/components/modals/WarningModal";
 
 const questionTypes = ["Multiple", "Text"];
 
@@ -15,9 +19,17 @@ interface QuestionProps {
   index: number;
   question: QuestionType;
   setQuestion: (q: QuestionType) => void;
+  handleDelete?: () => void;
 }
 
-function Question({ index, question, setQuestion }: QuestionProps) {
+function Question({
+  index,
+  question,
+  setQuestion,
+  handleDelete,
+}: QuestionProps) {
+  const [deleting, setDeleting] = useState<boolean>(false);
+
   return (
     <div className="flex rounded border-2 border-gray-700 p-5 gap-x-10">
       <div className="flex flex-col gap-y-5">
@@ -155,6 +167,26 @@ function Question({ index, question, setQuestion }: QuestionProps) {
             setQuestion({ ...question, optional: !required })
           }
         />
+        {handleDelete && (
+          <>
+            <div
+              className="text-red-500 flex gap-x-3 items-center cursor-pointer hover:underline"
+              onClick={() => setDeleting(true)}
+            >
+              <FaTrash size={17} /> Delete question
+            </div>
+            <AnimatePresence>
+              {deleting && (
+                <WarningModal
+                  title="Delete confirmation"
+                  description={`Are you sure you want to delete question ${index + 1}? This action cannot be undone.`}
+                  confirm={handleDelete}
+                  closeModal={() => setDeleting(false)}
+                />
+              )}
+            </AnimatePresence>
+          </>
+        )}
       </div>
     </div>
   );
