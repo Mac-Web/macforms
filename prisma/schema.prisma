@@ -85,6 +85,7 @@ model Form {
   private     Boolean    @default(false)
   code        String?
   open        Boolean    @default(true)
+  quiz        Boolean    @default(false)
   questions   Question[]
   responses   Response[]
 
@@ -98,6 +99,7 @@ model Question {
   description String?
   optional    Boolean      @default(false)
   type        QuestionType
+  correct     String?
   config      Json
   formId      String
   form        Form         @relation(fields: [formId], references: [id], onDelete: Cascade)

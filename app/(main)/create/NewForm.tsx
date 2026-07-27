@@ -25,11 +25,13 @@ function NewForm() {
     description: "",
     private: false,
     open: true,
+    quiz: false,
     questions: [
       {
         id: 0,
         title: "",
         type: "multiple",
+        correct: "",
         choices: [{ id: crypto.randomUUID(), text: "" }],
       },
     ],
@@ -73,6 +75,15 @@ function NewForm() {
         question.choices.some((c) => c.text.trim().length == 0)
       ) {
         return invalid(`Please fill in all the options for question ${i + 1}`);
+      }
+      if (
+        newForm.quiz &&
+        question.correct !== undefined &&
+        (!question.correct || question.correct.trim().length == 0)
+      ) {
+        return invalid(
+          `Please provide a correct answer for question ${i + 1}, or mark it as not having a correct answer`,
+        );
       }
     }
     const formId = await createForm(newForm);
@@ -178,12 +189,23 @@ function NewForm() {
             })
           }
           title="This form is accepting responses"
+        />{" "}
+        <Checkbox
+          text="Quiz"
+          checked={newForm.quiz || false}
+          setChecked={(quiz) =>
+            setNewForm((prev) => {
+              return { ...prev, quiz };
+            })
+          }
+          title="Make this form a quiz with correct answers"
         />
       </div>
       {newForm.questions.map((question, index) => (
         <Question
           key={question.id}
           index={index}
+          quiz={newForm.quiz || false}
           question={question}
           setQuestion={(q) =>
             setNewForm((prev) => {
@@ -218,6 +240,7 @@ function NewForm() {
                   id: prev.questions.length,
                   title: "",
                   type: "multiple",
+                  correct: "",
                   choices: [{ id: crypto?.randomUUID(), text: "" }],
                 },
               ],

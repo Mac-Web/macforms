@@ -5,6 +5,7 @@ import { FaEye, FaXmark } from "react-icons/fa6";
 import Questions from "./Questions";
 import Link from "next/link";
 import Image from "next/image";
+import { FaQuestionCircle } from "react-icons/fa";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -52,7 +53,9 @@ async function Page({ params, searchParams }: PageProps) {
   const session = await getSession();
   const search = await searchParams;
   const responseId = search?.edit as string;
+  const answerId = search?.answer as string;
   const response = responseId ? await getResponseData(responseId) : null;
+  const answers = answerId ? await getResponseData(answerId) : null;
   const preview =
     formData.userId === session?.user.id && search?.preview === "true"
       ? true
@@ -65,6 +68,14 @@ async function Page({ params, searchParams }: PageProps) {
         {formData.description && (
           <p className="text-gray-300">{formData.description}</p>
         )}
+        {formData.quiz && (
+          <p
+            className="text-gray-300 text-sm flex items-center gap-x-3"
+            title="This form is a quiz with correct answers"
+          >
+            <FaQuestionCircle size={17} /> Quiz
+          </p>
+        )}
         <p
           className="text-gray-300 text-xs"
           title={formData.createdAt!.toISOString()}
@@ -76,6 +87,8 @@ async function Page({ params, searchParams }: PageProps) {
         questions={formData.questions}
         formId={formData.id}
         res={response || null}
+        answers={answers || null}
+        quiz={formData.quiz}
       />
       <div className="flex flex-col gap-y-3 text-gray-300 text-sm items-center mt-10">
         <Link

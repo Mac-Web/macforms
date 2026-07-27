@@ -6,6 +6,7 @@ export interface FormType {
   private?: boolean;
   code?: string;
   open?: boolean;
+  quiz?: boolean;
   questions: QuestionType[];
   createdAt?: Date;
   updatedAt?: Date;
@@ -48,6 +49,7 @@ export type QuestionType = {
     title: string;
     description?: string;
     optional?: boolean;
+    correct?: string;
     type: K;
   } & QuestionTypeMap[K];
 }[Question];

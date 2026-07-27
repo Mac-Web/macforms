@@ -20,6 +20,7 @@ export async function getFormData(id: string): Promise<FormType | void> {
           private: isPrivate,
           code,
           open,
+          quiz,
           createdAt,
           updatedAt,
         } = existingForm;
@@ -32,15 +33,18 @@ export async function getFormData(id: string): Promise<FormType | void> {
           private: isPrivate,
           code: code || undefined,
           open,
+          quiz,
           createdAt,
           updatedAt,
           questions: existingForm.questions.map((question) => {
-            const { id, title, description, optional, type, config } = question;
+            const { id, title, description, optional, type, config, correct } =
+              question;
             const base = {
               id,
               title,
               description: description || undefined,
               optional,
+              correct: correct || undefined,
             };
             const json = JSON.parse(config as string);
             return type === "multiple"

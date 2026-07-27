@@ -15,12 +15,13 @@ export async function createForm(formData: FormType) {
           userId: session.user.id,
           questions: {
             create: formData.questions.map((q) => {
-              const { title, description, optional, type } = q;
+              const { title, description, optional, type, correct } = q;
               return {
                 title,
                 description,
                 optional,
                 type,
+                correct,
                 config:
                   type === "text"
                     ? JSON.stringify({ placeholder: q.placeholder })

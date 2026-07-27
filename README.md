@@ -12,7 +12,11 @@ MacForms, an app under the [MacWeb](https://macweb.app) collection of online app
 
 ## Features
 
-- Form creation
+- Form creation with two modes: multiple choice and free response
+- Response submission
+- Response editing
+- Create custom quizzes with correct answers
+- View quiz scores and accuracy
 - Cross domain auth using the main MacWeb auth & account system
 - More coming soon!
 

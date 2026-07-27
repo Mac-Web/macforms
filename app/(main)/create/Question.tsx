@@ -18,6 +18,7 @@ const questionTypes = ["Multiple", "Text"];
 interface QuestionProps {
   index: number;
   question: QuestionType;
+  quiz: boolean;
   setQuestion: (q: QuestionType) => void;
   handleDelete?: () => void;
 }
@@ -25,10 +26,12 @@ interface QuestionProps {
 function Question({
   index,
   question,
+  quiz,
   setQuestion,
   handleDelete,
 }: QuestionProps) {
   const [deleting, setDeleting] = useState<boolean>(false);
+  const hasCorrect = quiz && question.correct !== undefined ? true : false;
 
   return (
     <div className="flex rounded border-2 border-gray-700 p-5 gap-x-10">
@@ -46,7 +49,7 @@ function Question({
             setSelected={(type) => {
               const selectedType = type.toLowerCase() as QType;
               const { id, title, description, optional } = question;
-              const base = { id, title, description, optional };
+              const base = { id, title, description, optional, correct: "" };
               if (selectedType === "multiple") {
                 setQuestion({
                   ...base,
@@ -104,6 +107,11 @@ function Question({
                 <Choice
                   key={i}
                   index={i}
+                  quiz={hasCorrect}
+                  correct={hasCorrect ? question.correct : undefined}
+                  setCorrect={
+                    (correct) => setQuestion({ ...question, correct }) //TODO: allow more than one correct choices
+                  }
                   value={choice}
                   setValue={(value) => {
                     const choices = [...question.choices];
@@ -144,7 +152,12 @@ function Question({
         {question.type === "text" && (
           <>
             <label className={labelStyles}>
-              Input placeholder
+              <div>
+                Input placeholder{" "}
+                <span className="text-red-500" title="Required">
+                  *
+                </span>
+              </div>
               <Input
                 placeholder="This is a placeholder"
                 value={question.placeholder}
@@ -153,12 +166,36 @@ function Question({
                 }
               />
             </label>
+            {hasCorrect && (
+              <label className={labelStyles}>
+                <div>
+                  Correct answer{" "}
+                  <span className="text-red-500" title="Required">
+                    *
+                  </span>
+                </div>
+                <Input
+                  placeholder="What's the right answer?"
+                  value={question.correct || ""}
+                  setValue={(correct) => setQuestion({ ...question, correct })}
+                />
+              </label>
+            )}
             <Checkbox
               text="Long answer"
               checked={question.long || false}
               setChecked={(long) => setQuestion({ ...question, long })}
             />
           </>
+        )}
+        {quiz && (
+          <Checkbox
+            text="Has correct answer"
+            checked={hasCorrect}
+            setChecked={(value) =>
+              setQuestion({ ...question, correct: value ? "" : undefined })
+            }
+          />
         )}
         <Checkbox
           text="Required"

@@ -8,6 +8,8 @@ import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
 import Choice from "@/components/ui/Choice";
 import Btn from "@/components/ui/Btn";
+import { FaCheck } from "react-icons/fa";
+import { FaXmark } from "react-icons/fa6";
 
 function blankAnswers(questions: QuestionType[]): AnswerType[] {
   return questions.map((q, i) => {
@@ -18,24 +20,47 @@ function blankAnswers(questions: QuestionType[]): AnswerType[] {
   });
 }
 
+function getScore(questions: QuestionType[], answers: AnswerType[]) {
+  let correct = 0;
+  let total = 0;
+  questions.forEach((q) => {
+    if (q.correct !== undefined) {
+      total++;
+      const answer = answers.find((a) => a.questionId === q.id)!;
+      if (
+        (answer.type === "multiple" && answer.choices[0] === q.correct) ||
+        (answer.type === "text" &&
+          answer.text.trim().toLowerCase() === q.correct.trim().toLowerCase())
+      ) {
+        correct++;
+      }
+    }
+  });
+  return `${correct}/${total} (${Math.round((correct / total) * 1000) / 10}%)`;
+}
+
 interface QuestionsProps {
   questions: QuestionType[];
   formId: string;
   res?: ResponseType | null;
+  answers?: ResponseType | null;
+  quiz?: boolean;
 }
 
-function Questions({ questions, formId, res }: QuestionsProps) {
+function Questions({ questions, formId, res, answers, quiz }: QuestionsProps) {
   const [submitted, setSubmitted] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [response, setResponse] = useState<ResponseType>(
-    res || {
-      id: crypto.randomUUID(),
-      formId,
-      answers: blankAnswers(questions),
-    },
+    res ||
+      answers || {
+        id: crypto.randomUUID(),
+        formId,
+        answers: blankAnswers(questions),
+      },
   );
+  const score = answers && quiz ? getScore(questions, answers.answers) : null;
 
   async function handleSubmit() {
     setLoading(true);
@@ -79,6 +104,13 @@ function Questions({ questions, formId, res }: QuestionsProps) {
           <p className="text-gray-300">
             Your response has been recorded and submitted to the form owner.
           </p>
+          {quiz && (
+            <Btn
+              text="View score"
+              onclick={() => window.open(`?answer=${submitted}`, "_self")}
+              primary
+            />
+          )}
           <div className="flex flex-col gap-y-1 text-gray-300">
             <div
               onClick={() => window.open(`?edit=${submitted}`, "_self")}
@@ -96,11 +128,24 @@ function Questions({ questions, formId, res }: QuestionsProps) {
         </div>
       ) : (
         <>
-          <div className="w-full flex flex-col gap-y-5">
+          <div
+            className={`w-full flex flex-col gap-y-5 ${answers && "pointer-events-none"}`}
+          >
+            {score && (
+              <div className="bg-green-700 px-4 py-1.5 text-white font-bold rounded w-fit">
+                Score: {score}
+              </div>
+            )}
             {questions.map((question, i) => {
               const answer = response.answers.find(
                 (a) => a.questionId === question.id,
               ) as AnswerType;
+              const correct =
+                (answer.type === "multiple" &&
+                  question.correct === answer.choices[0]) ||
+                (answer.type === "text" &&
+                  question.correct?.trim().toLowerCase() ===
+                    answer.text.trim().toLowerCase());
 
               return (
                 <div key={question.id} className="flex flex-col gap-y-2">
@@ -186,39 +231,66 @@ function Questions({ questions, formId, res }: QuestionsProps) {
                           })}
                         </div>
                       )}
+                    {answers && quiz && question.correct !== undefined && (
+                      <div
+                        className={`px-4 py-2 rounded text-gray-300 flex items-center gap-x-3 ${correct ? "bg-green-950/80" : "bg-red-950/80"}`}
+                      >
+                        {correct ? (
+                          <>
+                            <FaCheck size={20} /> Correct
+                          </>
+                        ) : (
+                          <>
+                            <FaXmark size={20} /> Incorrect
+                          </>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               );
             })}
           </div>
-          {error && <div className="text-red-500 text-sm">{error}</div>}
-          <div className="flex gap-x-5 w-full">
-            <Btn
-              text={loading ? "Loading..." : res ? "Save" : "Submit"}
-              onclick={handleSubmit}
-              primary
-            />
-            <Btn text="Clear" onclick={() => setModalOpen(true)} />
-          </div>
-          <AnimatePresence>
-            {modalOpen && (
-              <Modal closeModal={() => setModalOpen(false)}>
-                <div className="flex flex-col gap-y-5">
-                  <h2 className="text-white text-xl font-bold">
-                    Clear confirmation
-                  </h2>
-                  <p className="text-gray-300">
-                    Are you sure you want to clear the form? This will wipe
-                    everything you&apos;ve already filled out.
-                  </p>
-                  <div className="flex gap-x-3">
-                    <Btn text="Confirm" onclick={handleClear} warning primary />
-                    <Btn text="Cancel" onclick={() => setModalOpen(false)} />
-                  </div>
-                </div>
-              </Modal>
-            )}
-          </AnimatePresence>
+          {!answers && (
+            <>
+              {error && <div className="text-red-500 text-sm">{error}</div>}
+              <div className="flex gap-x-5 w-full">
+                <Btn
+                  text={loading ? "Loading..." : res ? "Save" : "Submit"}
+                  onclick={handleSubmit}
+                  primary
+                />
+                <Btn text="Clear" onclick={() => setModalOpen(true)} />
+              </div>
+              <AnimatePresence>
+                {modalOpen && (
+                  <Modal closeModal={() => setModalOpen(false)}>
+                    <div className="flex flex-col gap-y-5">
+                      <h2 className="text-white text-xl font-bold">
+                        Clear confirmation
+                      </h2>
+                      <p className="text-gray-300">
+                        Are you sure you want to clear the form? This will wipe
+                        everything you&apos;ve already filled out.
+                      </p>
+                      <div className="flex gap-x-3">
+                        <Btn
+                          text="Confirm"
+                          onclick={handleClear}
+                          warning
+                          primary
+                        />
+                        <Btn
+                          text="Cancel"
+                          onclick={() => setModalOpen(false)}
+                        />
+                      </div>
+                    </div>
+                  </Modal>
+                )}
+              </AnimatePresence>
+            </>
+          )}
         </>
       )}
     </>
