@@ -48,3 +48,16 @@ export async function submitForm(formId: string, response: ResponseType) {
     console.error("Error: " + err);
   }
 }
+
+export async function accessForm(formId: string, code: string) {
+  try {
+    const existingForm = await prisma.form.findUnique({
+      where: { id: formId },
+    });
+    return existingForm && existingForm.private && existingForm.code === code
+      ? true
+      : false;
+  } catch (err) {
+    console.error("Error: " + err);
+  }
+}

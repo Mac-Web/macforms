@@ -1,10 +1,17 @@
 "use client";
 
 import type { Form } from "@/generated/prisma/client";
-import { FaEllipsisV, FaEye, FaPen, FaTrash } from "react-icons/fa";
+import {
+  FaEllipsisV,
+  FaEye,
+  FaPen,
+  FaTrash,
+  FaRegStar,
+  FaStar,
+} from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { deleteForm } from "@/app/(main)/forms/actions";
+import { deleteForm, starForm } from "@/app/(main)/forms/actions";
 import WarningModal from "../modals/WarningModal";
 import Link from "next/link";
 
@@ -56,11 +63,22 @@ function Menu({ form, path }: MenuProps) {
             className="origin-top-right absolute right-0 top-8 bg-gray-950 border-2 border-gray-700 rounded text-sm p-2 flex flex-col gap-y-1"
           >
             <Link href={`/forms/${form.id}`} className={optionStyles}>
-              <FaPen size={15} /> Edit
+              <FaPen size={17} /> Edit
             </Link>
             <Link href={`/${form.id}?preview=true`} className={optionStyles}>
               <FaEye size={17} /> Preview
             </Link>
+            <div
+              className={optionStyles}
+              onClick={async () => await starForm(form.id, !form.starred, path)}
+            >
+              {form.starred ? (
+                <FaStar size={17} className="text-green-600" />
+              ) : (
+                <FaRegStar size={17} />
+              )}{" "}
+              {form.starred ? "Unstar" : "Star"}
+            </div>
             <div
               className={optionStyles + " text-red-500"}
               onClick={() => setDeleting(true)}

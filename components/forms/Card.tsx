@@ -1,10 +1,26 @@
+"use client";
+
 import type { Form } from "@/generated/prisma/client";
 import { SiGoogleforms } from "react-icons/si";
-import { FaQuestionCircle } from "react-icons/fa";
+import {
+  FaQuestionCircle,
+  FaRegStar,
+  FaStar,
+  FaEyeSlash,
+  FaGlobe,
+  FaEye,
+  FaLock,
+} from "react-icons/fa";
+import { starForm } from "@/app/(main)/forms/actions";
 import Link from "next/link";
 import Menu from "./Menu";
 
 function Card({ form }: { form: Form }) {
+  async function handleStar(e: React.MouseEvent) {
+    e.preventDefault();
+    await starForm(form.id, !form.starred, "/forms");
+  }
+
   return (
     <div className="relative">
       <Link
@@ -13,10 +29,30 @@ function Card({ form }: { form: Form }) {
       >
         <SiGoogleforms size={25} />{" "}
         {/*TODO: replace this icon with iframe preview of actual, user custom upload banner, or smth else*/}
-        <h2 className="text-xl text-white font-bold flex gap-x-2 items-center">
-          {form.title}
-          {form.quiz && <FaQuestionCircle size={17} title="Quiz" />}
-        </h2>
+        <h2 className="text-lg text-white font-bold">{form.title}</h2>
+        <div className="flex gap-x-2 items-center flex-wrap">
+          <div
+            onClick={handleStar}
+            title={`${form.starred ? "Unstar" : "Star"} form`}
+          >
+            {form.starred ? (
+              <FaStar size={15} className="text-green-600" />
+            ) : (
+              <FaRegStar size={15} />
+            )}
+          </div>
+          {form.private ? (
+            <FaLock size={15} title="Private" />
+          ) : (
+            <FaGlobe size={15} title="Public" />
+          )}
+          {form.open ? (
+            <FaEye size={15} title="Accepting responses" />
+          ) : (
+            <FaEyeSlash size={15} title="Not accepting responses" />
+          )}
+          {form.quiz && <FaQuestionCircle size={15} title="Quiz" />}
+        </div>
         {form.description && (
           <p className="text-sm">
             {form.description.slice(0, 50) +

@@ -17,3 +17,18 @@ export async function deleteForm(formId: string, path: string) {
     console.error("Error: " + err);
   }
 }
+
+export async function starForm(formId: string, starred: boolean, path: string) {
+  try {
+    const session = await getSession();
+    if (session) {
+      await prisma.form.update({
+        where: { id: formId, userId: session.user.id },
+        data: { starred },
+      });
+      revalidatePath(path);
+    }
+  } catch (err) {
+    console.error("Error: " + err);
+  }
+}

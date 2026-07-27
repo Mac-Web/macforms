@@ -86,6 +86,7 @@ model Form {
   code        String?
   open        Boolean    @default(true)
   quiz        Boolean    @default(false)
+  starred     Boolean    @default(false)
   questions   Question[]
   responses   Response[]
 

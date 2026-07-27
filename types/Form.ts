@@ -7,6 +7,7 @@ export interface FormType {
   code?: string;
   open?: boolean;
   quiz?: boolean;
+  starred?: boolean;
   questions: QuestionType[];
   createdAt?: Date;
   updatedAt?: Date;

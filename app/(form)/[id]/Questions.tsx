@@ -3,7 +3,7 @@
 import type { ResponseType, QuestionType, AnswerType } from "@/types/Form";
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
-import { submitForm } from "./actions";
+import { accessForm, submitForm } from "./actions";
 import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
 import Choice from "@/components/ui/Choice";
@@ -45,9 +45,21 @@ interface QuestionsProps {
   res?: ResponseType | null;
   answers?: ResponseType | null;
   quiz?: boolean;
+  preview?: boolean;
+  isPrivate?: boolean;
 }
 
-function Questions({ questions, formId, res, answers, quiz }: QuestionsProps) {
+function Questions({
+  questions,
+  formId,
+  res,
+  answers,
+  quiz,
+  preview,
+  isPrivate,
+}: QuestionsProps) {
+  const [locked, setLocked] = useState<boolean>(isPrivate || false);
+  const [code, setCode] = useState<string>("");
   const [submitted, setSubmitted] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -61,6 +73,21 @@ function Questions({ questions, formId, res, answers, quiz }: QuestionsProps) {
       },
   );
   const score = answers && quiz ? getScore(questions, answers.answers) : null;
+
+  async function handleAccess(e: React.SubmitEvent) {
+    e.preventDefault();
+    if (code.trim().length > 0) {
+      setError(null);
+      setLoading(true);
+      const res = await accessForm(formId, code);
+      if (res) {
+        setLocked(false);
+      } else {
+        setError("Incorrect access code");
+      }
+      setLoading(false);
+    }
+  }
 
   async function handleSubmit() {
     setLoading(true);
@@ -125,6 +152,23 @@ function Questions({ questions, formId, res, answers, quiz }: QuestionsProps) {
               Submit another response
             </div>
           </div>
+        </div>
+      ) : isPrivate && locked ? (
+        <div className="border-2 border-gray-700 rounded px-5 py-10 flex flex-col gap-y-5 w-full text-gray-300">
+          Please enter the access code to fill out this private form
+          <form onSubmit={handleAccess} className="flex flex-col gap-y-5">
+            <Input
+              placeholder="ABC123"
+              value={code}
+              setValue={(c) => setCode(c.trim().slice(0, 6).toUpperCase())}
+            />
+            {error && <div className="text-red-500">{error}</div>}
+            <Btn
+              text={loading ? "Loading..." : "Submit"}
+              type="submit"
+              primary
+            />
+          </form>
         </div>
       ) : (
         <>
@@ -251,7 +295,7 @@ function Questions({ questions, formId, res, answers, quiz }: QuestionsProps) {
               );
             })}
           </div>
-          {!answers && (
+          {!answers && !preview && (
             <>
               {error && <div className="text-red-500 text-sm">{error}</div>}
               <div className="flex gap-x-5 w-full">

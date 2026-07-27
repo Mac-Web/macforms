@@ -2,6 +2,7 @@ import { getSession } from "@/lib/auth";
 import { getFormData } from "@/lib/forms";
 import { redirect } from "next/navigation";
 import Hero from "@/components/layout/Hero";
+import Btn from "@/components/ui/Btn";
 
 async function fetchFormData(id: string) {
   const session = await getSession();
@@ -47,7 +48,8 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
   return (
     <div className="px-5 md:px-20 lg:px-[calc(50%-550px)] flex flex-col items-center">
       <Hero title={formData.title} description={formData.description || ""} />
-      <p className="text-gray-300">Form editing coming soon!</p>
+      <p className="text-gray-300 mb-10">Form editing coming soon!</p>
+      <Btn text="Go to form" link={`/${formData.id}`} primary />
     </div>
   );
 }

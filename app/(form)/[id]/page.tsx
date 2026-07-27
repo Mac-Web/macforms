@@ -7,6 +7,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { FaQuestionCircle } from "react-icons/fa";
 
+const linkStyles = "underline w-fit hover:text-green-600";
+
 interface PageProps {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -83,13 +85,30 @@ async function Page({ params, searchParams }: PageProps) {
           Created {formData.createdAt!.toLocaleDateString()}
         </p>
       </div>
-      <Questions
-        questions={formData.questions}
-        formId={formData.id}
-        res={response || null}
-        answers={answers || null}
-        quiz={formData.quiz}
-      />
+      {formData.open || (formData.userId === session?.user.id && preview) ? (
+        <Questions
+          questions={formData.questions}
+          formId={formData.id}
+          res={response || null}
+          answers={answers || null}
+          quiz={formData.quiz}
+          preview={preview}
+          isPrivate={formData.private}
+        />
+      ) : (
+        <div className="border-2 border-gray-700 rounded px-5 py-10 flex flex-col gap-y-5 w-full text-gray-300">
+          Sorry, the owner of this form has not opened it to accept responses
+          yet.
+          <Link href="/" className={linkStyles}>
+            Go back to MacForms
+          </Link>
+          {formData.userId === session?.user.id && (
+            <Link href="?preview=true" className={linkStyles}>
+              Go to preview (owner only)
+            </Link>
+          )}
+        </div>
+      )}
       <div className="flex flex-col gap-y-3 text-gray-300 text-sm items-center mt-10">
         <Link
           href="/"

@@ -2,20 +2,62 @@
 
 import type { Form } from "@/generated/prisma/client";
 import { useState } from "react";
+import { FaArrowsAltV, FaFilter, FaList, FaPlusCircle } from "react-icons/fa";
 import Input from "@/components/ui/Input";
 import Card from "@/components/forms/Card";
+import Dropdown from "@/components/ui/Dropdown";
 import Link from "next/link";
-import { FaPlusCircle } from "react-icons/fa";
+
+const filters = ["All", "Quizzes", "Starred", "Private", "Open"];
+const sorts = ["Name", "Created", "Updated", "Starred", "Type"];
+const optionStyles = "flex items-center gap-x-3 text-gray-300";
 
 function Forms({ forms }: { forms: Form[] }) {
+  const [filter, setFilter] = useState<string>("all");
+  const [sort, setSort] = useState<string>("name");
+  const [ascending, setAscending] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
-  const displayedForms = forms.filter((form) => {
-    const query = search.trim().toLowerCase();
-    return (
-      form.title.toLowerCase().includes(query) ||
-      form.description?.toLowerCase().includes(query)
-    );
-  });
+  const displayedForms = forms
+    .filter((form) => {
+      const query = search.trim().toLowerCase();
+      let passed = true;
+      switch (filter) {
+        case "quizzes":
+          passed = form.quiz;
+          break;
+        case "starred":
+          passed = form.starred;
+          break;
+        case "private":
+          passed = form.private;
+          break;
+        case "open":
+          passed = form.open;
+          break;
+      }
+      return (
+        passed &&
+        (form.title.toLowerCase().includes(query) ||
+          form.description?.toLowerCase().includes(query))
+      );
+    })
+    .sort((a, b) => {
+      switch (sort) {
+        case "name":
+          return a.title.localeCompare(b.title);
+        case "created":
+          return a.createdAt.getTime() - b.createdAt.getTime();
+        case "updated":
+          return a.updatedAt.getTime() - b.updatedAt.getTime();
+        case "type":
+          return String(b.quiz).localeCompare(String(a.quiz));
+        case "starred":
+          return String(b.starred).localeCompare(String(a.starred));
+        default:
+          return a.id.localeCompare(b.id);
+      }
+    });
+  if (!ascending) displayedForms.reverse();
 
   return (
     <div className="flex flex-col gap-y-10 items-center">
@@ -26,6 +68,35 @@ function Forms({ forms }: { forms: Form[] }) {
         styles="w-100"
         clear
       />
+      <div className="flex gap-x-10">
+        <label className={optionStyles}>
+          <FaFilter /> Filter by:{" "}
+          <Dropdown
+            selected={filters.find((f) => f.toLowerCase() === filter)!}
+            setSelected={(f) => setFilter(f.toLowerCase())}
+            values={filters}
+            styles="w-25 text-center"
+          />
+        </label>
+        <label className={optionStyles}>
+          <FaList /> Sort by:{" "}
+          <Dropdown
+            selected={sorts.find((s) => s.toLowerCase() === sort)!}
+            setSelected={(s) => setSort(s.toLowerCase())}
+            values={sorts}
+            styles="w-30 text-center"
+          />
+        </label>
+        <label className={optionStyles}>
+          <FaArrowsAltV /> Order:{" "}
+          <Dropdown
+            selected={ascending ? "Ascending" : "Descending"}
+            setSelected={(o) => setAscending(o.includes("Asc") ? true : false)}
+            values={["Ascending", "Descending"]}
+            styles="w-30 text-center"
+          />
+        </label>
+      </div>
       <div className="flex flex-wrap justify-center gap-5">
         {displayedForms.length > 0 ? (
           <>

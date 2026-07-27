@@ -130,6 +130,16 @@ function NewForm() {
           />
         </label>
         <Checkbox
+          text="Quiz"
+          checked={newForm.quiz || false}
+          setChecked={(quiz) =>
+            setNewForm((prev) => {
+              return { ...prev, quiz };
+            })
+          }
+          title="Make this form a quiz with correct answers"
+        />
+        <Checkbox
           text="Private"
           checked={newForm.private || false}
           setChecked={(p) =>
@@ -189,16 +199,6 @@ function NewForm() {
             })
           }
           title="This form is accepting responses"
-        />{" "}
-        <Checkbox
-          text="Quiz"
-          checked={newForm.quiz || false}
-          setChecked={(quiz) =>
-            setNewForm((prev) => {
-              return { ...prev, quiz };
-            })
-          }
-          title="Make this form a quiz with correct answers"
         />
       </div>
       {newForm.questions.map((question, index) => (
