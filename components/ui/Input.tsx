@@ -9,9 +9,17 @@ interface InputProps {
   setValue: (value: string) => void;
   styles?: string;
   clear?: boolean;
+  onblur?: () => void;
 }
 
-function Input({ placeholder, value, setValue, styles, clear }: InputProps) {
+function Input({
+  placeholder,
+  value,
+  setValue,
+  styles,
+  clear,
+  onblur,
+}: InputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   function handleClear() {
@@ -32,6 +40,7 @@ function Input({ placeholder, value, setValue, styles, clear }: InputProps) {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         ref={inputRef}
+        onBlur={onblur}
       />
       {clear && value.length > 0 && (
         <div

@@ -1,0 +1,59 @@
+"use server";
+
+import { getSession } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
+
+export async function addInviteCode(formId: string, code: string) {
+  try {
+    const session = await getSession();
+    if (session) {
+      await prisma.form.update({
+        where: { id: formId, userId: session.user.id },
+        data: { codes: { push: code } },
+      });
+    }
+  } catch (err) {
+    console.error("Error: " + err);
+  }
+}
+
+export async function removeInviteCode(formId: string, code: string) {
+  try {
+    const existingForm = await prisma.form.findUnique({
+      where: { id: formId },
+    });
+    if (existingForm && existingForm.codes.includes(code)) {
+      await prisma.form.update({
+        where: { id: formId },
+        data: { codes: { set: existingForm.codes.filter((c) => c !== code) } },
+      });
+      const cookieStore = await cookies();
+      cookieStore.set(`${formId}_access`, "true", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 3600,
+        path: "/",
+      });
+      return true;
+    }
+  } catch (err) {
+    console.error("Error: " + err);
+  }
+}
+
+export async function renameForm(formId: string, newTitle: string) {
+  try {
+    const session = await getSession(); //TODO: allow invited one time collaborators to edit too with cookie access
+    if (session) {
+      await prisma.form.update({
+        where: { id: formId, userId: session.user.id },
+        data: { title: newTitle },
+      });
+      revalidatePath(`/forms/${formId}`);
+    }
+  } catch (err) {
+    console.error("Error: " + err);
+  }
+}
