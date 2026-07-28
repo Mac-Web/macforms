@@ -2,10 +2,11 @@ import { getSession } from "@/lib/auth";
 import { getFormData } from "@/lib/forms";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import Hero from "@/components/layout/Hero";
-import Btn from "@/components/ui/Btn";
-import Bar from "./Bar";
 import Access from "@/components/forms/Access";
+import Bar from "./Bar";
+import Responses from "./Responses";
+import Settings from "./Settings";
+import Edit from "./Edit";
 
 async function fetchFormData(id: string) {
   const formData = await getFormData(id);
@@ -74,7 +75,7 @@ async function Page({ params, searchParams }: PageProps) {
   }
 
   return (
-    <div className="px-5 md:px-20 lg:px-[calc(50%-550px)] flex flex-col items-center pb-100">
+    <div className="px-5 md:px-20 lg:px-[calc(50%-550px)] flex flex-col items-center">
       {code && !cookieAccess ? (
         <div className="w-150 border-gray-700 rounded border-2 flex flex-col gap-y-5 p-5 mt-5">
           <h2 className="text-lg text-white font-bold">
@@ -92,11 +93,11 @@ async function Page({ params, searchParams }: PageProps) {
       ) : (
         <>
           <Bar title={formData.title} id={id} tab={tab} />
-          <Hero
-            title={formData.title}
-            description={formData.description || ""}
-          />
-          <Btn text="Go to form" link={`/${formData.id}`} primary />
+          {tab !== "responses" && tab !== "settings" && (
+            <Edit formData={formData} />
+          )}
+          {tab === "responses" && <Responses formData={formData} />}
+          {tab === "settings" && <Settings />}
         </>
       )}
     </div>

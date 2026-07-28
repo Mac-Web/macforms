@@ -22,15 +22,15 @@ function Bar({ title, id, tab }: BarProps) {
 
   async function handleRename(e?: React.SubmitEvent) {
     e?.preventDefault();
-    if (name && name.trim().length > 0) {
+    if (name && name.trim() !== title && name.trim().length > 0) {
       await renameForm(id, name);
-      setName(null);
     }
+    setName(null);
   }
 
   return (
-    <div className="sticky top-20 w-full">
-      <div className="w-full p-2.5 border-2 border-gray-700 relative rounded flex justify-center items-center">
+    <div className="sticky top-20 w-full z-10">
+      <div className="w-full p-2.5 border-2 bg-gray-950 border-gray-700 relative rounded flex justify-center items-center">
         <form onSubmit={handleRename} className="absolute left-2.5">
           {name !== null ? (
             <Input
