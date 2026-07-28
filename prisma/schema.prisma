@@ -25,6 +25,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   forms         Form[]
+  collabForms   Form[]    @relation(name: "collaborators")
 
   @@map("user")
 }
@@ -77,19 +78,20 @@ model Verification {
 }
 
 model Form {
-  id          String     @id @default(uuid())
-  userId      String
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title       String
-  description String?
-  private     Boolean    @default(false)
-  code        String?
-  open        Boolean    @default(true)
-  quiz        Boolean    @default(false)
-  starred     Boolean    @default(false)
-  codes       String[]
-  questions   Question[]
-  responses   Response[]
+  id            String     @id @default(uuid())
+  userId        String
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  collaborators User[]     @relation(name: "collaborators")
+  title         String
+  description   String?
+  private       Boolean    @default(false)
+  code          String?
+  open          Boolean    @default(true)
+  quiz          Boolean    @default(false)
+  starred       Boolean    @default(false)
+  codes         String[]
+  questions     Question[]
+  responses     Response[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

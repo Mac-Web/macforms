@@ -10,6 +10,7 @@ interface InputProps {
   styles?: string;
   clear?: boolean;
   onblur?: () => void;
+  onclear?: () => void;
 }
 
 function Input({
@@ -19,12 +20,16 @@ function Input({
   styles,
   clear,
   onblur,
+  onclear,
 }: InputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   function handleClear() {
     setValue("");
-    inputRef.current?.focus();
+    if (onclear) onclear();
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 50);
   }
 
   return (
@@ -47,9 +52,9 @@ function Input({
           className="flex items-center justify-center hover:bg-gray-300 hover:dark:bg-gray-800 rounded cursor-pointer 
                   duration-300 w-7.5 h-7.5 absolute right-2 text-gray-300"
           title="Clear"
-          onClick={handleClear}
+          onMouseDown={handleClear}
         >
-          <FaXmark size={20} onClick={handleClear} title="Clear" />
+          <FaXmark size={20} title="Clear" />
         </div>
       )}
     </div>

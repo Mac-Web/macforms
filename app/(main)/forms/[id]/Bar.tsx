@@ -1,5 +1,6 @@
 "use client";
 
+import type { User } from "@/generated/prisma/client";
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { renameForm } from "./actions";
@@ -14,9 +15,11 @@ interface BarProps {
   title: string;
   id: string;
   tab: string;
+  users: User[];
+  userId: string;
 }
 
-function Bar({ title, id, tab }: BarProps) {
+function Bar({ title, id, tab, users, userId }: BarProps) {
   const [name, setName] = useState<string | null>(null);
   const [inviting, setInviting] = useState<boolean>(false);
 
@@ -89,7 +92,12 @@ function Bar({ title, id, tab }: BarProps) {
       </div>
       <AnimatePresence>
         {inviting && (
-          <InviteModal id={id} closeModal={() => setInviting(false)} />
+          <InviteModal
+            id={id}
+            closeModal={() => setInviting(false)}
+            users={users}
+            userId={userId}
+          />
         )}
       </AnimatePresence>
     </div>

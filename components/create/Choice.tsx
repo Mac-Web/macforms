@@ -53,7 +53,7 @@ function Choice({
         <Checkbox
           text="Correct"
           checked={correct === value.id}
-          setChecked={(v) => setCorrect!(v ? value.id : undefined)}
+          setChecked={(v) => setCorrect!(v ? value.id : "")}
         />
       )}
     </label>

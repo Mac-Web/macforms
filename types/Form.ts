@@ -1,3 +1,5 @@
+import type { User } from "@/generated/prisma/client";
+
 export interface FormType {
   id: string;
   userId: string;
@@ -9,6 +11,7 @@ export interface FormType {
   quiz?: boolean;
   starred?: boolean;
   questions: QuestionType[];
+  collaborators?: User[];
   createdAt?: Date;
   updatedAt?: Date;
 }

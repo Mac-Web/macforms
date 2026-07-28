@@ -9,7 +9,7 @@ export async function getFormData(id: string): Promise<FormType | void> {
       //TODO: only logged in users can fetch form data
       const existingForm = await prisma.form.findUnique({
         where: { id }, //TODO: handle permission sometimes needs to check if session user id matches
-        include: { questions: true },
+        include: { questions: true, collaborators: true },
       });
       if (existingForm) {
         const {
@@ -23,6 +23,7 @@ export async function getFormData(id: string): Promise<FormType | void> {
           quiz,
           createdAt,
           updatedAt,
+          collaborators,
         } = existingForm;
 
         const formData: FormType = {
@@ -34,6 +35,7 @@ export async function getFormData(id: string): Promise<FormType | void> {
           code: code || undefined,
           open,
           quiz,
+          collaborators,
           createdAt,
           updatedAt,
           questions: existingForm.questions.map((question) => {

@@ -28,7 +28,7 @@ function Modal({ children, closeModal }: ModalProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed top-0 left-0 z-20 w-screen h-screen flex items-center justify-center bg-gray-950/85 backdrop-blur-sm"
+      className="fixed top-0 left-0 z-30 w-screen h-screen flex items-center justify-center bg-gray-950/85 backdrop-blur-sm"
     >
       <motion.div
         initial={{ scale: 0, y: 100 }}

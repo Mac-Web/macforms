@@ -92,7 +92,13 @@ async function Page({ params, searchParams }: PageProps) {
         </div>
       ) : (
         <>
-          <Bar title={formData.title} id={id} tab={tab} />
+          <Bar
+            title={formData.title}
+            id={id}
+            tab={tab}
+            users={formData.collaborators || []}
+            userId={formData.userId}
+          />
           {tab !== "responses" && tab !== "settings" && (
             <Edit formData={formData} />
           )}

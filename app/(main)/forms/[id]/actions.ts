@@ -57,3 +57,39 @@ export async function renameForm(formId: string, newTitle: string) {
     console.error("Error: " + err);
   }
 }
+
+export async function inviteCollaborators(formId: string, users: string[]) {
+  try {
+    const session = await getSession();
+    if (session) {
+      await prisma.form.update({
+        where: { id: formId, userId: session.user.id },
+        data: {
+          collaborators: {
+            connect: users.map((u) => {
+              return { id: u };
+            }),
+          },
+        },
+      });
+      revalidatePath(`/forms/${formId}`);
+    }
+  } catch (err) {
+    console.error("Error: " + err);
+  }
+}
+
+export async function removeCollaborator(formId: string, userId: string) {
+  try {
+    const session = await getSession();
+    if (session) {
+      await prisma.form.update({
+        where: { id: formId, userId: session.user.id },
+        data: { collaborators: { disconnect: { id: userId } } },
+      });
+      revalidatePath(`/forms/${formId}`);
+    }
+  } catch (err) {
+    console.error("Error: " + err);
+  }
+}

@@ -7,35 +7,41 @@ import { FaShuffle } from "react-icons/fa6";
 import { FaPlusCircle } from "react-icons/fa";
 import { createForm } from "./actions";
 import { useRouter } from "next/navigation";
+import { deleteForm } from "../forms/actions";
+import { AnimatePresence } from "framer-motion";
 import Input from "@/components/ui/Input";
 import Textarea from "@/components/ui/Textarea";
 import Checkbox from "@/components/ui/Checkbox";
 import Btn from "@/components/ui/Btn";
 import Question from "./Question";
+import WarningModal from "@/components/modals/WarningModal";
 
 const alphabet = "qwertyuiopasdfghjklzxcvbnm1234567890".split("");
 
-function NewForm() {
+function NewForm({ formData }: { formData?: FormType }) {
   const [error, setError] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [newForm, setNewForm] = useState<FormType>({
-    id: "",
-    userId: "",
-    title: "",
-    description: "",
-    private: false,
-    open: true,
-    quiz: false,
-    questions: [
-      {
-        id: 0,
-        title: "",
-        type: "multiple",
-        correct: "",
-        choices: [{ id: crypto.randomUUID(), text: "" }],
-      },
-    ],
-  });
+  const [newForm, setNewForm] = useState<FormType>(
+    formData || {
+      id: "",
+      userId: "",
+      title: "",
+      description: "",
+      private: false,
+      open: true,
+      quiz: false,
+      questions: [
+        {
+          id: 0,
+          title: "",
+          type: "multiple",
+          correct: "",
+          choices: [{ id: crypto.randomUUID(), text: "" }],
+        },
+      ],
+    },
+  );
   const router = useRouter();
 
   function generateCode(): string {
@@ -94,10 +100,21 @@ function NewForm() {
     }
   }
 
+  async function handleDelete() {
+    if (formData) {
+      setLoading(true);
+      await deleteForm(formData.id);
+      setLoading(false);
+      router.push("/forms");
+    }
+  }
+
   return (
     <div className="w-200 mx-auto flex flex-col gap-y-5">
       <div className="flex flex-col gap-y-5 rounded border-2 border-gray-700 p-5">
-        <h1 className="text-white text-lg font-bold">Form information</h1>
+        <h1 className="text-white text-lg font-bold">
+          {formData ? "Edit form" : "Form information"}
+        </h1>
         <label className={labelStyles}>
           <div>
             Name{" "}
@@ -252,12 +269,34 @@ function NewForm() {
         Add question
       </div>
       {error && <div className="text-red-500 text-sm">{error}</div>}
-      <Btn
-        text={loading ? "Loading..." : "Save"}
-        onclick={handleSave}
-        styles={error ? "" : "mt-5"}
-        primary
-      />
+      <div className={`flex gap-x-3 ${error && "mt-5"}`}>
+        <Btn
+          text={loading ? "Loading..." : "Save"}
+          onclick={handleSave}
+          primary
+        />
+        {formData && (
+          <>
+            <Btn
+              text="Delete"
+              onclick={() => setDeleting(true)}
+              warning
+              primary
+            />
+            <AnimatePresence>
+              {deleting && (
+                <WarningModal
+                  title="Delete confirmation"
+                  description={`Are you sure you want to delete the form "${newForm.title}"? This will delete all its related data and responses. This action cannot be undone.`}
+                  confirm={handleDelete}
+                  closeModal={() => setDeleting(false)}
+                  loading={loading}
+                />
+              )}
+            </AnimatePresence>
+          </>
+        )}
+      </div>
     </div>
   );
 }
