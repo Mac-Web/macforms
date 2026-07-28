@@ -13,6 +13,7 @@ export async function createForm(formData: FormType) {
           ...formData,
           id: undefined,
           userId: session.user.id,
+          collaborators: undefined,
           questions: {
             create: formData.questions.map((q) => {
               const { title, description, optional, type, correct } = q;
