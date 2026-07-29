@@ -88,7 +88,7 @@ model Form {
   code          String?
   open          Boolean    @default(true)
   quiz          Boolean    @default(false)
-  starred       Boolean    @default(false)
+  starred       Boolean    @default(false) //TODO: starred shouldn't be on the form it should be for each individual user/collaborator
   codes         String[]
   questions     Question[]
   responses     Response[]

@@ -48,7 +48,13 @@ export async function renameForm(formId: string, newTitle: string) {
     const session = await getSession(); //TODO: allow invited one time collaborators to edit too with cookie access
     if (session) {
       await prisma.form.update({
-        where: { id: formId, userId: session.user.id },
+        where: {
+          id: formId,
+          OR: [
+            { userId: session.user.id },
+            { collaborators: { some: { id: session.user.id } } },
+          ],
+        },
         data: { title: newTitle },
       });
       revalidatePath(`/forms/${formId}`);

@@ -31,7 +31,12 @@ async function Page() {
   const session = await getSession();
   if (!session) redirect("/");
   const forms = await prisma.form.findMany({
-    where: { userId: session.user.id },
+    where: {
+      OR: [
+        { userId: session.user.id },
+        { collaborators: { some: { id: session.user.id } } },
+      ],
+    },
   });
 
   return (
@@ -40,7 +45,7 @@ async function Page() {
         title="My Forms"
         description="Browse, manage, edit, and view all the forms you've created on this page!"
       />
-      <Forms forms={forms} />
+      <Forms forms={forms} userId={session.user.id} />
     </div>
   );
 }

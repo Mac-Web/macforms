@@ -1,11 +1,11 @@
 "use client";
 
 import type { FormType } from "@/types/Form";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { labelStyles } from "@/lib/constants";
 import { FaShuffle } from "react-icons/fa6";
 import { FaPlusCircle } from "react-icons/fa";
-import { createForm } from "./actions";
+import { createForm, editForm } from "./actions";
 import { useRouter } from "next/navigation";
 import { deleteForm } from "../forms/actions";
 import { AnimatePresence } from "framer-motion";
@@ -18,7 +18,13 @@ import WarningModal from "@/components/modals/WarningModal";
 
 const alphabet = "qwertyuiopasdfghjklzxcvbnm1234567890".split("");
 
-function NewForm({ formData }: { formData?: FormType }) {
+interface NewFormProps {
+  formData?: FormType;
+  userId?: string;
+  setUpdated?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function NewForm({ formData, userId, setUpdated }: NewFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -42,6 +48,7 @@ function NewForm({ formData }: { formData?: FormType }) {
       ],
     },
   );
+  const newFormRef = useRef(newForm);
   const router = useRouter();
 
   function generateCode(): string {
@@ -52,21 +59,22 @@ function NewForm({ formData }: { formData?: FormType }) {
       .toUpperCase();
   }
 
-  async function handleSave() {
-    setLoading(true);
+  async function handleSave(auto?: boolean) {
+    const form = auto ? newFormRef.current : newForm;
+    if (!auto) setLoading(true);
     setError(null);
     function invalid(message: string) {
-      setError(message);
+      if (!auto) setError(message);
       setLoading(false);
     }
-    if (newForm.title.trim().length == 0) {
+    if (form.title.trim().length == 0) {
       return invalid("Please give your form a title");
     }
-    if (newForm.private && (!newForm.code || newForm.code.trim().length == 0)) {
+    if (form.private && (!form.code || form.code.trim().length == 0)) {
       return invalid("Please generate an access code for the private form");
     }
-    for (let i = 0; i < newForm.questions.length; i++) {
-      const question = newForm.questions[i];
+    for (let i = 0; i < form.questions.length; i++) {
+      const question = form.questions[i];
       if (question.title.trim().length == 0) {
         return invalid(`Please give question ${i + 1} a title`);
       }
@@ -83,7 +91,7 @@ function NewForm({ formData }: { formData?: FormType }) {
         return invalid(`Please fill in all the options for question ${i + 1}`);
       }
       if (
-        newForm.quiz &&
+        form.quiz &&
         question.correct !== undefined &&
         (!question.correct || question.correct.trim().length == 0)
       ) {
@@ -92,12 +100,23 @@ function NewForm({ formData }: { formData?: FormType }) {
         );
       }
     }
-    const formId = await createForm(newForm);
-    if (formId) {
-      router.push(`/forms/${formId}`);
-    } else {
+    if (formData) {
+      await editForm(form, auto);
+      if (auto && setUpdated) {
+        setUpdated(true);
+        const timeout = setTimeout(() => {
+          setUpdated(false);
+          clearTimeout(timeout);
+        }, 2000);
+      }
       setLoading(false);
+    } else {
+      const formId = await createForm(form);
+      if (formId) {
+        router.push(`/forms/${formId}`);
+      }
     }
+    setLoading(false);
   }
 
   async function handleDelete() {
@@ -108,6 +127,28 @@ function NewForm({ formData }: { formData?: FormType }) {
       router.push("/forms");
     }
   }
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      if (formData && setUpdated) {
+        await handleSave(true);
+      } //TODO: add a user setting or form setting to disable autosave
+    }, 60000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [formData]);
+
+  useEffect(() => {
+    newFormRef.current = newForm;
+  }, [newForm]);
+
+  useEffect(() => {
+    if (formData) {
+      setNewForm(formData);
+    }
+  }, [formData]);
 
   return (
     <div className="w-200 mx-auto flex flex-col gap-y-5">
@@ -272,10 +313,10 @@ function NewForm({ formData }: { formData?: FormType }) {
       <div className={`flex gap-x-3 ${error && "mt-5"}`}>
         <Btn
           text={loading ? "Loading..." : "Save"}
-          onclick={handleSave}
+          onclick={() => handleSave()}
           primary
         />
-        {formData && (
+        {formData && formData.userId === userId && (
           <>
             <Btn
               text="Delete"

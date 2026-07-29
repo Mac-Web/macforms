@@ -216,7 +216,7 @@ function Question({
               {deleting && (
                 <WarningModal
                   title="Delete confirmation"
-                  description={`Are you sure you want to delete question ${index + 1}? This action cannot be undone.`}
+                  description={`Are you sure you want to delete question ${index + 1}? This will delete all its responses (if it has any) as well. This action cannot be undone.`}
                   confirm={handleDelete}
                   closeModal={() => setDeleting(false)}
                 />

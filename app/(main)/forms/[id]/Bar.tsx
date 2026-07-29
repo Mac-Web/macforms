@@ -17,9 +17,11 @@ interface BarProps {
   tab: string;
   users: User[];
   userId: string;
+  isOwner?: boolean;
+  updated?: boolean;
 }
 
-function Bar({ title, id, tab, users, userId }: BarProps) {
+function Bar({ title, id, tab, users, userId, isOwner, updated }: BarProps) {
   const [name, setName] = useState<string | null>(null);
   const [inviting, setInviting] = useState<boolean>(false);
 
@@ -34,7 +36,10 @@ function Bar({ title, id, tab, users, userId }: BarProps) {
   return (
     <div className="sticky top-20 w-full z-10">
       <div className="w-full p-2.5 border-2 bg-gray-950 border-gray-700 relative rounded flex justify-center items-center">
-        <form onSubmit={handleRename} className="absolute left-2.5">
+        <form
+          onSubmit={handleRename}
+          className="absolute left-2.5 flex items-center gap-x-3"
+        >
           {name !== null ? (
             <Input
               placeholder="Form name"
@@ -51,6 +56,11 @@ function Bar({ title, id, tab, users, userId }: BarProps) {
               {title}
             </h2>
           )}
+          <div
+            className={`text-gray-300 text-sm ${updated ? "opacity-100" : "opacity-0"} transition-opacity!`}
+          >
+            Form autosaved
+          </div>
         </form>
         <div className="flex gap-x-3">
           <Link
@@ -72,22 +82,27 @@ function Bar({ title, id, tab, users, userId }: BarProps) {
           })}
         </div>
         <div className="absolute right-2.5 flex gap-x-2">
-          <Btn
-            text="Invite"
-            onclick={() => setInviting(true)}
-            styles="text-[16px]"
-          />
+          {isOwner && (
+            <Btn
+              text="Invite"
+              onclick={() => setInviting(true)}
+              styles="text-[16px]"
+            />
+          )}
           <Btn
             text="Preview"
             link={`/${id}?preview=true`}
             styles="text-[16px]"
+            primary={!isOwner}
           />
-          <Btn
-            text="Publish"
-            onclick={() => console.log("publish")}
-            styles="text-[16px]"
-            primary
-          />
+          {isOwner && (
+            <Btn
+              text="Publish"
+              onclick={() => console.log("publish")}
+              styles="text-[16px]"
+              primary
+            />
+          )}
         </div>
       </div>
       <AnimatePresence>

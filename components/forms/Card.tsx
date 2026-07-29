@@ -15,7 +15,13 @@ import { starForm } from "@/app/(main)/forms/actions";
 import Link from "next/link";
 import Menu from "./Menu";
 
-function Card({ form }: { form: Form }) {
+interface CardProps {
+  form: Form;
+  shared?: boolean;
+  userId: string;
+}
+
+function Card({ form, shared, userId }: CardProps) {
   async function handleStar(e: React.MouseEvent) {
     e.preventDefault();
     await starForm(form.id, !form.starred, "/forms");
@@ -52,6 +58,14 @@ function Card({ form }: { form: Form }) {
             <FaEyeSlash size={15} title="Not accepting responses" />
           )}
           {form.quiz && <FaQuestionCircle size={15} title="Quiz" />}
+          {shared && (
+            <span
+              className="bg-gray-800/50 text-xs text-gray-300 font-normal px-2 py-1 rounded"
+              title="You've been invited as a collaborator for this form"
+            >
+              Shared
+            </span>
+          )}
         </div>
         {form.description && (
           <p className="text-sm">
@@ -66,7 +80,7 @@ function Card({ form }: { form: Form }) {
           </span>
         </div>
       </Link>
-      <Menu form={form} path="/forms" />
+      <Menu form={form} path="/forms" userId={userId} />
     </div>
   );
 }

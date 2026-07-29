@@ -8,11 +8,32 @@ import Card from "@/components/forms/Card";
 import Dropdown from "@/components/ui/Dropdown";
 import Link from "next/link";
 
-const filters = ["All", "Quizzes", "Starred", "Private", "Open"];
-const sorts = ["Name", "Created", "Updated", "Starred", "Type"];
+const filters = [
+  "All",
+  "Quizzes",
+  "Starred",
+  "Shared",
+  "Owned",
+  "Private",
+  "Open",
+];
+const sorts = [
+  "Name",
+  "Created",
+  "Updated",
+  "Starred",
+  "Shared",
+  "Owned",
+  "Type",
+];
 const optionStyles = "flex items-center gap-x-3 text-gray-300";
 
-function Forms({ forms }: { forms: Form[] }) {
+interface FormsProps {
+  forms: Form[];
+  userId: string;
+}
+
+function Forms({ forms, userId }: FormsProps) {
   const [filter, setFilter] = useState<string>("all");
   const [sort, setSort] = useState<string>("name");
   const [ascending, setAscending] = useState<boolean>(true);
@@ -34,6 +55,12 @@ function Forms({ forms }: { forms: Form[] }) {
         case "open":
           passed = form.open;
           break;
+        case "shared":
+          passed = form.userId !== userId;
+          break;
+        case "owned":
+          passed = form.userId === userId;
+          break;
       }
       return (
         passed &&
@@ -53,6 +80,14 @@ function Forms({ forms }: { forms: Form[] }) {
           return String(b.quiz).localeCompare(String(a.quiz));
         case "starred":
           return String(b.starred).localeCompare(String(a.starred));
+        case "shared":
+          return String(b.userId !== userId).localeCompare(
+            String(a.userId !== userId),
+          );
+        case "owned":
+          return String(b.userId === userId).localeCompare(
+            String(a.userId === userId),
+          );
         default:
           return a.id.localeCompare(b.id);
       }
@@ -101,7 +136,12 @@ function Forms({ forms }: { forms: Form[] }) {
         {displayedForms.length > 0 ? (
           <>
             {displayedForms.map((form) => (
-              <Card key={form.id} form={form} />
+              <Card
+                key={form.id}
+                form={form}
+                shared={form.userId !== userId}
+                userId={userId}
+              />
             ))}
             <Link
               href="/create"

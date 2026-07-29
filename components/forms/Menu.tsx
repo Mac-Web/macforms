@@ -21,9 +21,10 @@ const optionStyles =
 interface MenuProps {
   form: Form;
   path: string;
+  userId: string;
 }
 
-function Menu({ form, path }: MenuProps) {
+function Menu({ form, path, userId }: MenuProps) {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [deleting, setDeleting] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -79,12 +80,14 @@ function Menu({ form, path }: MenuProps) {
               )}{" "}
               {form.starred ? "Unstar" : "Star"}
             </div>
-            <div
-              className={optionStyles + " text-red-500"}
-              onClick={() => setDeleting(true)}
-            >
-              <FaTrash size={17} /> Delete
-            </div>
+            {form.userId === userId && (
+              <div
+                className={optionStyles + " text-red-500"}
+                onClick={() => setDeleting(true)}
+              >
+                <FaTrash size={17} /> Delete
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

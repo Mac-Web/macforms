@@ -66,9 +66,15 @@ async function Page({ params, searchParams }: PageProps) {
   const cookieAccess =
     formData.userId === session?.user.id ||
     cookieStore.get(`${id}_access`)?.value === "true";
+  const isCollaborator = formData.collaborators?.find(
+    (user) => user.id === session?.user.id,
+  )
+    ? true
+    : false;
   if (
     (!session || session.user.id !== formData.userId) &&
     !cookieAccess &&
+    !isCollaborator &&
     !code
   ) {
     redirect("/");
@@ -92,15 +98,22 @@ async function Page({ params, searchParams }: PageProps) {
         </div>
       ) : (
         <>
-          <Bar
-            title={formData.title}
-            id={id}
-            tab={tab}
-            users={formData.collaborators || []}
-            userId={formData.userId}
-          />
+          {(tab === "responses" || tab === "settings") && (
+            <Bar
+              title={formData.title}
+              id={id}
+              tab={tab}
+              users={formData.collaborators || []}
+              userId={formData.userId}
+              isOwner={formData.userId === session?.user.id}
+            />
+          )}
           {tab !== "responses" && tab !== "settings" && (
-            <Edit formData={formData} />
+            <Edit
+              formData={formData}
+              users={formData.collaborators || []}
+              userId={formData.userId}
+            />
           )}
           {tab === "responses" && <Responses formData={formData} />}
           {tab === "settings" && <Settings />}

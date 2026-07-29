@@ -58,10 +58,12 @@ async function Page({ params, searchParams }: PageProps) {
   const answerId = search?.answer as string;
   const response = responseId ? await getResponseData(responseId) : null;
   const answers = answerId ? await getResponseData(answerId) : null;
-  const preview =
-    formData.userId === session?.user.id && search?.preview === "true"
+  const canView =
+    formData.userId === session?.user.id ||
+    formData.collaborators?.find((u) => u.id === session?.user.id)
       ? true
       : false;
+  const preview = canView && search?.preview === "true" ? true : false;
 
   return (
     <div className="w-200 mx-auto py-10 flex flex-col gap-y-10 items-center">
@@ -85,7 +87,7 @@ async function Page({ params, searchParams }: PageProps) {
           Created {formData.createdAt!.toLocaleDateString()}
         </p>
       </div>
-      {formData.open || (formData.userId === session?.user.id && preview) ? (
+      {formData.open || (canView && preview) ? (
         <Questions
           questions={formData.questions}
           formId={formData.id}
@@ -102,9 +104,9 @@ async function Page({ params, searchParams }: PageProps) {
           <Link href="/" className={linkStyles}>
             Go back to MacForms
           </Link>
-          {formData.userId === session?.user.id && (
+          {canView && (
             <Link href="?preview=true" className={linkStyles}>
-              Go to preview (owner only)
+              Go to preview (owner and collaborators only)
             </Link>
           )}
         </div>
