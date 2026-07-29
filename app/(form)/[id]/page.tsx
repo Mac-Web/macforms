@@ -2,10 +2,11 @@ import { getFormData, getResponseData } from "@/lib/forms";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { FaEye, FaXmark } from "react-icons/fa6";
+import { FaQuestionCircle } from "react-icons/fa";
+import { prisma } from "@/lib/prisma";
 import Questions from "./Questions";
 import Link from "next/link";
 import Image from "next/image";
-import { FaQuestionCircle } from "react-icons/fa";
 
 const linkStyles = "underline w-fit hover:text-green-600";
 
@@ -15,6 +16,8 @@ interface PageProps {
 }
 
 async function fetchFormData(id: string) {
+  const shortForm = await prisma.form.findUnique({ where: { shortened: id } });
+  if (shortForm) redirect(`/${shortForm.id}`);
   const formData = await getFormData(id);
   if (!formData) redirect("/");
   return formData;

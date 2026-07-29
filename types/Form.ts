@@ -2,6 +2,7 @@ import type { User } from "@/generated/prisma/client";
 
 export interface FormType {
   id: string;
+  shortened?: string;
   userId: string;
   title: string;
   description?: string;

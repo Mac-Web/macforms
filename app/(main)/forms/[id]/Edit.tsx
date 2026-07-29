@@ -23,6 +23,9 @@ function Edit({ formData, users, userId }: EditProps) {
         tab="edit"
         users={users}
         userId={userId}
+        open={formData.open || false}
+        code={formData.code}
+        short={formData.shortened}
         isOwner={userId === formData.userId}
         updated={updated}
       />

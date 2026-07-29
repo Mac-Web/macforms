@@ -79,6 +79,7 @@ model Verification {
 
 model Form {
   id            String     @id @default(uuid())
+  shortened     String?    @unique
   userId        String
   user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   collaborators User[]     @relation(name: "collaborators")

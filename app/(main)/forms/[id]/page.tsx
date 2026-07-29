@@ -104,6 +104,9 @@ async function Page({ params, searchParams }: PageProps) {
               id={id}
               tab={tab}
               users={formData.collaborators || []}
+              open={formData.open || false}
+              code={formData.code} //TODO: maybe just pass in formData directly without so many props? do the same with Edit.tsx as well
+              short={formData.shortened}
               userId={formData.userId}
               isOwner={formData.userId === session?.user.id}
             />

@@ -99,3 +99,48 @@ export async function removeCollaborator(formId: string, userId: string) {
     console.error("Error: " + err);
   }
 }
+
+export async function publishForm(formId: string, open: boolean) {
+  try {
+    const session = await getSession();
+    if (session) {
+      await prisma.form.update({
+        where: {
+          id: formId,
+          OR: [
+            { userId: session.user.id },
+            { collaborators: { some: { id: session.user.id } } },
+          ],
+        },
+        data: { open: !open },
+      });
+      revalidatePath(`/forms/${formId}`);
+    }
+  } catch (err) {
+    console.error("Error: " + err);
+  }
+}
+
+export async function shortenLink(formId: string) {
+  try {
+    const session = await getSession();
+    if (session) {
+      const newForm = await prisma.form.update({
+        where: {
+          id: formId,
+          OR: [
+            { userId: session.user.id },
+            { collaborators: { some: { id: session.user.id } } },
+          ],
+        },
+        data: {
+          shortened: crypto.randomUUID().replaceAll("-", "").slice(0, 8), //TODO: shorten even more by using macweb.app root so set up rerouting on root domain too
+        },
+      });
+      revalidatePath(`/forms/${formId}`);
+      return newForm.shortened;
+    }
+  } catch (err) {
+    console.error("Error: " + err);
+  }
+}

@@ -14,6 +14,7 @@ export async function getFormData(id: string): Promise<FormType | void> {
       if (existingForm) {
         const {
           id,
+          shortened,
           userId,
           title,
           description,
@@ -28,6 +29,7 @@ export async function getFormData(id: string): Promise<FormType | void> {
 
         const formData: FormType = {
           id,
+          shortened: shortened || undefined,
           userId,
           title,
           description: description || undefined,

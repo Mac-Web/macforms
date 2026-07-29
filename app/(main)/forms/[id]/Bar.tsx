@@ -5,6 +5,7 @@ import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { renameForm } from "./actions";
 import InviteModal from "@/components/modals/InviteModal";
+import PublishModal from "@/components/modals/PublishModal";
 import Input from "@/components/ui/Input";
 import Btn from "@/components/ui/Btn";
 import Link from "next/link";
@@ -17,13 +18,28 @@ interface BarProps {
   tab: string;
   users: User[];
   userId: string;
+  open: boolean;
+  code?: string;
+  short?: string;
   isOwner?: boolean;
   updated?: boolean;
 }
 
-function Bar({ title, id, tab, users, userId, isOwner, updated }: BarProps) {
+function Bar({
+  title,
+  id,
+  tab,
+  users,
+  userId,
+  open,
+  code,
+  short,
+  isOwner,
+  updated,
+}: BarProps) {
   const [name, setName] = useState<string | null>(null);
   const [inviting, setInviting] = useState<boolean>(false);
+  const [publishing, setPublishing] = useState<boolean>(false);
 
   async function handleRename(e?: React.SubmitEvent) {
     e?.preventDefault();
@@ -93,16 +109,13 @@ function Bar({ title, id, tab, users, userId, isOwner, updated }: BarProps) {
             text="Preview"
             link={`/${id}?preview=true`}
             styles="text-[16px]"
-            primary={!isOwner}
           />
-          {isOwner && (
-            <Btn
-              text="Publish"
-              onclick={() => console.log("publish")}
-              styles="text-[16px]"
-              primary
-            />
-          )}
+          <Btn
+            text="Publish"
+            onclick={() => setPublishing(true)}
+            styles="text-[16px]"
+            primary
+          />
         </div>
       </div>
       <AnimatePresence>
@@ -112,6 +125,15 @@ function Bar({ title, id, tab, users, userId, isOwner, updated }: BarProps) {
             closeModal={() => setInviting(false)}
             users={users}
             userId={userId}
+          />
+        )}
+        {publishing && (
+          <PublishModal
+            id={id}
+            closeModal={() => setPublishing(false)}
+            code={code}
+            open={open}
+            short={short}
           />
         )}
       </AnimatePresence>
