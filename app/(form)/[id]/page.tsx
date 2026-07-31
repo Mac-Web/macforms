@@ -15,9 +15,16 @@ interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-async function fetchFormData(id: string) {
+async function fetchFormData(id: string, edit?: string) {
   const shortForm = await prisma.form.findUnique({ where: { shortened: id } });
   if (shortForm) redirect(`/${shortForm.id}`);
+  if (edit) {
+    const userForm = await prisma.response.findMany({
+      where: { formId: id, userId: edit },
+    });
+    if (userForm.length > 0)
+      redirect(`/${userForm[0].formId}?edit=${userForm[0].id}`);
+  }
   const formData = await getFormData(id);
   if (!formData) redirect("/");
   return formData;
@@ -54,10 +61,10 @@ export async function generateMetadata({ params }: PageProps) {
 
 async function Page({ params, searchParams }: PageProps) {
   const { id } = await params;
-  const formData = await fetchFormData(id);
-  const session = await getSession();
   const search = await searchParams;
   const responseId = search?.edit as string;
+  const formData = await fetchFormData(id, responseId);
+  const session = await getSession();
   const answerId = search?.answer as string;
   const response = responseId ? await getResponseData(responseId) : null;
   const answers = answerId ? await getResponseData(answerId) : null;
@@ -67,10 +74,19 @@ async function Page({ params, searchParams }: PageProps) {
       ? true
       : false;
   const preview = canView && search?.preview === "true" ? true : false;
+  const userIds = (
+    await prisma.response.findMany({ where: { formId: id } })
+  ).reduce((acc: string[], r) => {
+    if (r.userId) acc.push(r.userId);
+    return acc;
+  }, []);
 
   return (
     <div className="w-200 mx-auto py-10 flex flex-col gap-y-10 items-center">
-      <div className="border-2 border-gray-700 rounded p-5 flex flex-col gap-y-5 w-full">
+      <div
+        className="border-2 border-gray-700 rounded p-5 flex flex-col gap-y-5 w-full"
+        style={{ backgroundColor: formData.backgroundColor }}
+      >
         <h1 className="text-white text-3xl font-bold">{formData.title}</h1>
         {formData.description && (
           <p className="text-gray-300">{formData.description}</p>
@@ -99,6 +115,13 @@ async function Page({ params, searchParams }: PageProps) {
           quiz={formData.quiz}
           preview={preview}
           isPrivate={formData.private}
+          shuffleQuestions={formData.shuffleQuestions}
+          shuffleOptions={formData.shuffleOptions}
+          allowEditingResponses={formData.allowEditingResponses}
+          allowMultipleResponses={formData.allowMultipleResponses}
+          user={session?.user}
+          userIds={userIds}
+          backgroundColor={formData.backgroundColor}
         />
       ) : (
         <div className="border-2 border-gray-700 rounded px-5 py-10 flex flex-col gap-y-5 w-full text-gray-300">

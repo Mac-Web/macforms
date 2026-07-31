@@ -1,5 +1,6 @@
 "use server";
 
+import type { SettingsType } from "@/types/Form";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
@@ -139,6 +140,27 @@ export async function shortenLink(formId: string) {
       });
       revalidatePath(`/forms/${formId}`);
       return newForm.shortened;
+    }
+  } catch (err) {
+    console.error("Error: " + err);
+  }
+}
+
+export async function saveSettings(formId: string, settings: SettingsType) {
+  try {
+    const session = await getSession();
+    if (session) {
+      await prisma.form.update({
+        where: {
+          id: formId,
+          OR: [
+            { userId: session.user.id },
+            { collaborators: { some: { id: session.user.id } } },
+          ],
+        },
+        data: { ...settings },
+      });
+      revalidatePath(`/forms/${formId}`);
     }
   } catch (err) {
     console.error("Error: " + err);

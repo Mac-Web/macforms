@@ -65,6 +65,8 @@ async function Responses({ formData }: { formData: FormType }) {
         ) / 10
       : sorted[Math.floor(scores.length / 2)];
 
+  //TODO: tabs/dropdown for individual response and individual question view
+
   return (
     <div className="w-200 mt-8 flex flex-col gap-y-5">
       {formData.quiz && (

@@ -11,6 +11,11 @@ export interface FormType {
   open?: boolean;
   quiz?: boolean;
   starred?: boolean;
+  shuffleQuestions?: boolean;
+  shuffleOptions?: boolean;
+  allowMultipleResponses?: boolean;
+  allowEditingResponses?: boolean;
+  backgroundColor?: string;
   questions: QuestionType[];
   collaborators?: User[];
   createdAt?: Date;
@@ -70,4 +75,12 @@ export type AnswerType = {
 export interface ChoiceType {
   id: string;
   text: string;
+}
+
+export interface SettingsType {
+  shuffleQuestions: boolean;
+  shuffleOptions: boolean;
+  allowMultipleResponses: boolean;
+  allowEditingResponses: boolean;
+  backgroundColor?: string;
 }

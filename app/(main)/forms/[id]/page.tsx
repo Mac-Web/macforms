@@ -79,6 +79,13 @@ async function Page({ params, searchParams }: PageProps) {
   ) {
     redirect("/");
   }
+  const settings = {
+    allowEditingResponses: formData.allowEditingResponses!,
+    allowMultipleResponses: formData.allowMultipleResponses!,
+    shuffleOptions: formData.shuffleOptions!,
+    shuffleQuestions: formData.shuffleQuestions!,
+    backgroundColor: formData.backgroundColor!,
+  };
 
   return (
     <div className="px-5 md:px-20 lg:px-[calc(50%-550px)] flex flex-col items-center">
@@ -119,7 +126,9 @@ async function Page({ params, searchParams }: PageProps) {
             />
           )}
           {tab === "responses" && <Responses formData={formData} />}
-          {tab === "settings" && <Settings />}
+          {tab === "settings" && (
+            <Settings id={formData.id} existingSettings={settings} />
+          )}
         </>
       )}
     </div>

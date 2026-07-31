@@ -248,16 +248,18 @@ function NewForm({ formData, userId, setUpdated }: NewFormProps) {
             </div>
           </label>
         )}
-        <Checkbox
-          text="Open"
-          checked={newForm.open || false}
-          setChecked={(open) =>
-            setNewForm((prev) => {
-              return { ...prev, open };
-            })
-          }
-          title="This form is accepting responses"
-        />
+        {!formData && (
+          <Checkbox
+            text="Open"
+            checked={newForm.open || false}
+            setChecked={(open) =>
+              setNewForm((prev) => {
+                return { ...prev, open };
+              })
+            }
+            title="This form is accepting responses"
+          />
+        )}
       </div>
       {newForm.questions.map((question, index) => (
         <Question

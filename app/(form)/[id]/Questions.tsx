@@ -1,15 +1,45 @@
 "use client";
 
 import type { ResponseType, QuestionType, AnswerType } from "@/types/Form";
-import { useState } from "react";
+import type { User } from "better-auth";
+import { useMemo, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { accessForm, submitForm } from "./actions";
+import { FaCheck } from "react-icons/fa";
+import { FaXmark } from "react-icons/fa6";
 import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
 import Choice from "@/components/ui/Choice";
 import Btn from "@/components/ui/Btn";
-import { FaCheck } from "react-icons/fa";
-import { FaXmark } from "react-icons/fa6";
+
+function shuffle(
+  questions: QuestionType[],
+  shuffleQuestions?: boolean,
+  shuffleOptions?: boolean,
+): QuestionType[] {
+  if (!shuffleQuestions && !shuffleOptions) return questions;
+  const arr = [...questions];
+  for (let i = arr.length - 1; i >= 0; i--) {
+    if (shuffleQuestions) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = arr[i];
+      arr[i] = arr[j];
+      arr[j] = temp;
+    }
+    const current = arr[i];
+    if (shuffleOptions && current.type === "multiple") {
+      const options = [...current.choices];
+      for (let k = options.length - 1; k > 0; k--) {
+        const h = Math.floor(Math.random() * (k + 1));
+        const temp = options[k];
+        options[k] = options[h];
+        options[h] = temp;
+      }
+      current.choices = options;
+    }
+  }
+  return arr;
+}
 
 function blankAnswers(questions: QuestionType[]): AnswerType[] {
   return questions.map((q, i) => {
@@ -47,6 +77,13 @@ interface QuestionsProps {
   quiz?: boolean;
   preview?: boolean;
   isPrivate?: boolean;
+  shuffleQuestions?: boolean;
+  shuffleOptions?: boolean;
+  allowEditingResponses?: boolean;
+  allowMultipleResponses?: boolean;
+  user?: User;
+  userIds: string[];
+  backgroundColor?: string;
 }
 
 function Questions({
@@ -57,6 +94,13 @@ function Questions({
   quiz,
   preview,
   isPrivate,
+  shuffleQuestions,
+  shuffleOptions,
+  allowEditingResponses,
+  allowMultipleResponses,
+  user,
+  userIds,
+  backgroundColor,
 }: QuestionsProps) {
   const [locked, setLocked] = useState<boolean>(isPrivate || false);
   const [code, setCode] = useState<string>("");
@@ -71,6 +115,10 @@ function Questions({
         formId,
         answers: blankAnswers(questions),
       },
+  );
+  const displayedQuestions = useMemo(
+    () => shuffle(questions, shuffleQuestions, shuffleOptions),
+    [questions, shuffleQuestions, shuffleOptions],
   );
   const score = answers && quiz ? getScore(questions, answers.answers) : null;
 
@@ -109,7 +157,10 @@ function Questions({
     }
     const res = await submitForm(formId, response);
     setLoading(false);
-    if (res?.success) setSubmitted(res.id);
+    if (res?.success && res.id) setSubmitted(res.id);
+    if (res?.success === false)
+      setError("You cannot edit your response on this form.");
+    if (res?.message) setError(res.message);
   }
 
   function handleClear() {
@@ -129,7 +180,11 @@ function Questions({
             Thank you for responding!
           </h2>
           <p className="text-gray-300">
-            Your response has been recorded and submitted to the form owner.
+            Your response has been recorded and submitted to the form owner.{" "}
+            {!allowEditingResponses &&
+              "You are not allowed to edit your response on this form."}{" "}
+            {!allowMultipleResponses &&
+              "You cannot submit multiple responses on this form."}
           </p>
           {quiz && (
             <Btn
@@ -139,18 +194,22 @@ function Questions({
             />
           )}
           <div className="flex flex-col gap-y-1 text-gray-300">
-            <div
-              onClick={() => window.open(`?edit=${submitted}`, "_self")}
-              className="cursor-pointer hover:text-green-600 underline w-fit"
-            >
-              Edit response
-            </div>
-            <div
-              onClick={() => window.open(`/${formId}`, "_self")}
-              className="cursor-pointer hover:text-green-600 underline w-fit"
-            >
-              Submit another response
-            </div>
+            {allowEditingResponses && (
+              <div
+                onClick={() => window.open(`?edit=${submitted}`, "_self")}
+                className="cursor-pointer hover:text-green-600 underline w-fit"
+              >
+                Edit response
+              </div>
+            )}
+            {allowMultipleResponses && (
+              <div
+                onClick={() => window.open(`/${formId}`, "_self")}
+                className="cursor-pointer hover:text-green-600 underline w-fit"
+              >
+                Submit another response
+              </div>
+            )}
           </div>
         </div>
       ) : isPrivate && locked ? (
@@ -170,6 +229,34 @@ function Questions({
             />
           </form>
         </div>
+      ) : !allowMultipleResponses && !user ? (
+        <div className="flex flex-col gap-y-5 border-2 text-gray-300 border-gray-700 rounded w-full px-5 py-10">
+          This form only collects one response per user, so you have to be
+          logged in to fill it out.{" "}
+          <Btn
+            text="Sign in"
+            link="https://macweb.app/?redirect=macforms"
+            primary
+          />
+        </div>
+      ) : !allowMultipleResponses &&
+        user &&
+        userIds &&
+        userIds.includes(user.id) &&
+        !res ? (
+        <div className="flex flex-col gap-y-5 border-2 text-gray-300 border-gray-700 rounded w-full px-5 py-10">
+          This form only collects one response per user, and you&apos;ve already
+          filled it out.
+          {allowEditingResponses && (
+            <div
+              onClick={() => window.open(`?edit=${user.id}`, "_self")}
+              className="cursor-pointer hover:text-green-600 underline w-fit"
+            >
+              Edit response
+            </div>
+          )}
+          <Btn text="Go back" link="/" primary />
+        </div>
       ) : (
         <>
           <div
@@ -180,7 +267,7 @@ function Questions({
                 Score: {score}
               </div>
             )}
-            {questions.map((question, i) => {
+            {displayedQuestions.map((question, i) => {
               const answer = response.answers.find(
                 (a) => a.questionId === question.id,
               ) as AnswerType;
@@ -194,7 +281,10 @@ function Questions({
               return (
                 <div key={question.id} className="flex flex-col gap-y-2">
                   <div className="text-gray-300 text-sm">Question {i + 1}</div>
-                  <div className="border-2 border-gray-700 rounded p-5 flex flex-col gap-y-5">
+                  <div
+                    className="border-2 border-gray-700 rounded p-5 flex flex-col gap-y-5"
+                    style={{ backgroundColor }}
+                  >
                     <div className="flex flex-col gap-y-2">
                       <h2
                         className="text-white text-lg font-bold"
@@ -297,7 +387,11 @@ function Questions({
           </div>
           {!answers && !preview && (
             <>
-              {error && <div className="text-red-500 text-sm">{error}</div>}
+              {error && (
+                <div className="text-red-500 text-sm text-left w-full">
+                  {error}
+                </div>
+              )}
               <div className="flex gap-x-5 w-full">
                 <Btn
                   text={loading ? "Loading..." : res ? "Save" : "Submit"}
@@ -342,3 +436,5 @@ function Questions({
 }
 
 export default Questions;
+
+//TODO: refactor this monster
