@@ -21,7 +21,7 @@ function Btn({
   warning,
   primary,
 }: BtnProps) {
-  const btnStyles = `${primary ? "bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 font-bold text-white" : "border-gray-600 hover:border-gray-700 text-gray-300"} ${warning && "bg-red-600 hover:bg-red-700 border-red-600 hover:border-red-700"} border-2 w-fit cursor-pointer rounded py-1 px-3.5 text-lg ${styles}`;
+  const btnStyles = `${primary ? "bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 font-bold text-black dark:text-white" : "border-gray-600 hover:border-gray-700 text-black dark:text-gray-300"} ${warning && "bg-red-600 hover:bg-red-700 border-red-600 hover:border-red-700"} border-2 w-fit cursor-pointer rounded py-1 px-3.5 text-lg ${styles}`;
 
   return onclick || type ? (
     <button className={btnStyles} type={type} onClick={onclick}>

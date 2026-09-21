@@ -85,7 +85,9 @@ function InviteModal({ id, closeModal, users, userId }: InviteModal) {
   return (
     <Modal closeModal={closeModal}>
       <div className="flex flex-col gap-y-5">
-        <h2 className="text-white text-xl font-bold">Invite collaborators</h2>
+        <h2 className="text-black dark:text-white text-xl font-bold">
+          Invite collaborators
+        </h2>
         <form onSubmit={handleSearch} className="relative">
           <Input
             placeholder="Search MacWeb accounts"
@@ -102,7 +104,7 @@ function InviteModal({ id, closeModal, users, userId }: InviteModal) {
               return (
                 <div
                   key={user.id}
-                  className="border-2 border-gray-700 hover:bg-gray-900 px-3 py-1.5 rounded cursor-pointer flex gap-x-3 items-center text-gray-300 font-bold"
+                  className="border-2 border-gray-700 hover:bg-gray-300 dark:hover:bg-gray-900 px-3 py-1.5 rounded cursor-pointer flex gap-x-3 items-center text-black dark:text-gray-300 font-bold"
                   onClick={() =>
                     setSelectedUsers((prev) =>
                       selected
@@ -112,7 +114,7 @@ function InviteModal({ id, closeModal, users, userId }: InviteModal) {
                   }
                 >
                   <div
-                    className={`w-4.5 h-4.5 border-2 border-gray-700 rounded flex justify-center items-center ${selected && "bg-gray-700"}`}
+                    className={`w-4.5 h-4.5 border-2 border-gray-700 rounded flex justify-center items-center ${selected && "bg-gray-500 dark:bg-gray-700"}`}
                   >
                     <FaCheck
                       size={20}
@@ -133,7 +135,7 @@ function InviteModal({ id, closeModal, users, userId }: InviteModal) {
           ) : error ? (
             <div className="text-red-500 text-center text-sm">{error}</div>
           ) : (
-            <div className="text-gray-300 text-center text-sm">
+            <div className="text-black dark:text-gray-300 text-center text-sm">
               {loading
                 ? "Loading..."
                 : "No users found. Press enter to search users"}
@@ -154,13 +156,15 @@ function InviteModal({ id, closeModal, users, userId }: InviteModal) {
         )}
         {users.length > 0 && (
           <div>
-            <h2 className="text-white font-bold mb-1">Collaborators</h2>
+            <h2 className="text-black dark:text-white font-bold mb-1">
+              Collaborators
+            </h2>
             <div className="flex flex-col gap-y-2 max-h-35 overflow-auto">
               {users.map((user) => {
                 return (
                   <div
                     key={user.id}
-                    className="relative border-2 border-gray-700 px-3 py-1.5 rounded flex gap-x-3 items-center text-gray-300 font-bold"
+                    className="relative border-2 border-gray-700 px-3 py-1.5 rounded flex gap-x-3 items-center text-black dark:text-gray-300 font-bold"
                   >
                     <Image
                       src={user.image || "/avatar.svg"}
@@ -176,7 +180,7 @@ function InviteModal({ id, closeModal, users, userId }: InviteModal) {
                     >
                       {removing === user.id && (
                         <FaSpinner
-                          className="text-gray-300 animate-spin"
+                          className="text-black dark:text-gray-300 animate-spin"
                           size={15}
                         />
                       )}
@@ -193,12 +197,16 @@ function InviteModal({ id, closeModal, users, userId }: InviteModal) {
             </div>
           </div>
         )}
-        <div className="h-0.5 bg-gray-700 flex justify-center items-center my-3">
-          <div className="bg-gray-950 px-3 text-gray-300 text-sm">or</div>
+        <div className="h-0.5 bg-gray-500 dark:bg-gray-700 flex justify-center items-center my-3">
+          <div className="bg-gray-200 dark:bg-gray-950 px-3 text-black dark:text-gray-300 text-sm">
+            or
+          </div>
         </div>
         <div className="flex flex-col gap-y-3">
-          <div className="text-gray-300">Use one-time invite link</div>
-          <div className="bg-gray-900 rounded px-3 py-1.5 wrap-normal scrollbar-none whitespace-nowrap overflow-x-auto text-gray-300 text-sm">
+          <div className="text-black dark:text-gray-300">
+            Use one-time invite link
+          </div>
+          <div className="bg-gray-300 dark:bg-gray-900 rounded px-3 py-1.5 wrap-normal scrollbar-none whitespace-nowrap overflow-x-auto text-black dark:text-gray-300 text-sm">
             macforms.macweb.app/forms/{id}?code=CODE
           </div>
           <Btn

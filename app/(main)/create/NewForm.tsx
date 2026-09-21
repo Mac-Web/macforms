@@ -153,7 +153,7 @@ function NewForm({ formData, userId, setUpdated }: NewFormProps) {
   return (
     <div className="w-200 mx-auto flex flex-col gap-y-5">
       <div className="flex flex-col gap-y-5 rounded border-2 border-gray-700 p-5">
-        <h1 className="text-white text-lg font-bold">
+        <h1 className="text-black dark:text-white text-lg font-bold">
           {formData ? "Edit form" : "Form information"}
         </h1>
         <label className={labelStyles}>
@@ -233,7 +233,7 @@ function NewForm({ formData, userId, setUpdated }: NewFormProps) {
                 }
               />
               <div
-                className="rounded hover:bg-gray-900 cursor-pointer w-9 flex
+                className="rounded hover:bg-gray-300 dark:hover:bg-gray-900 cursor-pointer w-9 flex
               items-center justify-center"
                 title="Generate new access code"
                 onClick={(e) => {
@@ -289,7 +289,7 @@ function NewForm({ formData, userId, setUpdated }: NewFormProps) {
       ))}
       <div
         className="rounded border-dashed border-gray-700 border-2 py-5 flex flex-col items-center gap-y-1
-       text-gray-300 cursor-pointer hover:bg-gray-900"
+       text-black dark:text-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-900"
         onClick={() =>
           setNewForm((prev) => {
             return {

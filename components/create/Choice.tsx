@@ -43,7 +43,7 @@ function Choice({
         {removeChoice && (
           <FaTrash
             size={17}
-            className="cursor-pointer text-gray-300"
+            className="cursor-pointer text-black dark:text-gray-300"
             title="Remove option"
             onClick={removeChoice}
           />

@@ -36,13 +36,13 @@ function Dropdown({
     <div ref={menuRef} className="relative">
       <div
         onClick={() => setMenuOpen(!menuOpen)}
-        className={`rounded border-2 border-gray-700 px-4 py-2 cursor-pointer hover:bg-gray-900 text-sm font-bold ${styles}`}
+        className={`rounded border-2 border-gray-700 px-4 py-2 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-900 text-sm font-bold ${styles}`}
       >
         {selected}
       </div>
       {menuOpen && (
         <div
-          className="absolute top-[calc(100%+5px)] z-50 w-full left-0 bg-gray-950 border-2 border-gray-700 flex 
+          className="absolute top-[calc(100%+5px)] z-50 w-full left-0 bg-gray-200 dark:bg-gray-950 border-2 border-gray-700 flex 
         flex-col p-2 rounded"
         >
           {text && <div>{text}</div>}
@@ -53,7 +53,7 @@ function Dropdown({
                 setSelected(v);
                 setMenuOpen(false);
               }}
-              className={`p-2 hover:bg-gray-900 rounded cursor-pointer ${selected === v && "font-bold text-green-500"}`}
+              className={`p-2 hover:bg-gray-300 dark:hover:bg-gray-900 rounded cursor-pointer ${selected === v && "font-bold text-green-500"}`}
             >
               {v}
             </div>

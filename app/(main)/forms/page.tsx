@@ -37,6 +37,7 @@ async function Page() {
         { collaborators: { some: { id: session.user.id } } },
       ],
     },
+    include: { responses: true },
   });
 
   return (

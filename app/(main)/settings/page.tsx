@@ -30,7 +30,7 @@ function Page() {
         title="Settings"
         description="Manage your MacForms preferences, settings, and defaults on this page!"
       />
-      <div className="text-gray-300">Settings coming soon!</div>
+      <div className="text-black dark:text-gray-300">Settings coming soon!</div>
     </div>
   );
 }

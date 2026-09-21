@@ -19,9 +19,10 @@ interface CardProps {
   form: Form;
   shared?: boolean;
   userId: string;
+  length: number;
 }
 
-function Card({ form, shared, userId }: CardProps) {
+function Card({ form, shared, userId, length }: CardProps) {
   async function handleStar(e: React.MouseEvent) {
     e.preventDefault();
     await starForm(form.id, !form.starred, "/forms");
@@ -31,11 +32,13 @@ function Card({ form, shared, userId }: CardProps) {
     <div className="relative">
       <Link
         href={`/forms/${form.id}`}
-        className="h-full border-gray-700 border-2 rounded p-5 flex flex-col gap-y-3 text-gray-300 w-50 hover:bg-gray-900"
+        className="h-full border-gray-700 border-2 rounded p-5 flex flex-col gap-y-3 text-black dark:text-gray-300 w-50 hover:bg-gray-300 dark:hover:bg-gray-900"
       >
         <SiGoogleforms size={25} />{" "}
         {/*TODO: replace this icon with iframe preview of actual, user custom upload banner, or smth else*/}
-        <h2 className="text-lg text-white font-bold">{form.title}</h2>
+        <h2 className="text-lg text-black dark:text-white font-bold">
+          {form.title}
+        </h2>
         <div className="flex gap-x-2 items-center flex-wrap">
           <div
             onClick={handleStar}
@@ -60,7 +63,7 @@ function Card({ form, shared, userId }: CardProps) {
           {form.quiz && <FaQuestionCircle size={15} title="Quiz" />}
           {shared && (
             <span
-              className="bg-gray-800/50 text-xs text-gray-300 font-normal px-2 py-1 rounded"
+              className="bg-gray-500/50 dark:bg-gray-800/50 text-xs text-black dark:text-gray-300 font-normal px-2 py-1 rounded"
               title="You've been invited as a collaborator for this form"
             >
               Shared
@@ -73,6 +76,9 @@ function Card({ form, shared, userId }: CardProps) {
               (form.description.length > 50 ? "..." : "")}
           </p>
         )}
+        <p className="text-sm">
+          {length} response{length == 1 ? "" : "s"}
+        </p>
         <div className="text-xs">
           Last updated{" "}
           <span title={form.updatedAt!.toISOString()}>

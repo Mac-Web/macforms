@@ -1,6 +1,6 @@
 "use client";
 
-import type { Form } from "@/generated/prisma/client";
+import type { Form, Response } from "@/generated/prisma/client";
 import { useState } from "react";
 import { FaArrowsAltV, FaFilter, FaList, FaPlusCircle } from "react-icons/fa";
 import Input from "@/components/ui/Input";
@@ -26,10 +26,14 @@ const sorts = [
   "Owned",
   "Type",
 ];
-const optionStyles = "flex items-center gap-x-3 text-gray-300";
+const optionStyles = "flex items-center gap-x-3 text-black dark:text-gray-300";
+
+type FormType = Form & {
+  responses: Response[];
+};
 
 interface FormsProps {
-  forms: Form[];
+  forms: FormType[];
   userId: string;
 }
 
@@ -141,18 +145,19 @@ function Forms({ forms, userId }: FormsProps) {
                 form={form}
                 shared={form.userId !== userId}
                 userId={userId}
+                length={form.responses.length}
               />
             ))}
             <Link
               href="/create"
-              className="h-auto flex flex-col items-center justify-center text-gray-300 gap-y-3 py-5 border-2 border-dashed border-gray-700 rounded hover:bg-gray-900 w-50"
+              className="h-auto flex flex-col items-center justify-center text-black dark:text-gray-300 gap-y-3 py-5 border-2 border-dashed border-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-900 w-50"
             >
               <FaPlusCircle size={25} />
               Create form
             </Link>
           </>
         ) : (
-          <div className="my-5 text-gray-300">
+          <div className="my-5 text-black dark:text-gray-300">
             No forms found!{" "}
             <Link href="/create" className="underline">
               Create one

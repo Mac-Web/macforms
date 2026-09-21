@@ -10,7 +10,8 @@ import Input from "@/components/ui/Input";
 import Btn from "@/components/ui/Btn";
 import Link from "next/link";
 
-const linkStyles = "text-gray-300 px-3 py-1.5 hover:bg-gray-900 rounded";
+const linkStyles =
+  "text-black dark:text-gray-300 px-3 py-1.5 hover:bg-gray-300 dark:hover:bg-gray-900 rounded";
 
 interface BarProps {
   title: string;
@@ -51,7 +52,7 @@ function Bar({
 
   return (
     <div className="sticky top-20 w-full z-10">
-      <div className="w-full p-2.5 border-2 bg-gray-950 border-gray-700 relative rounded flex justify-center items-center">
+      <div className="w-full p-2.5 border-2 bg-gray-200 dark:bg-gray-950 border-gray-700 relative rounded flex justify-center items-center">
         <form
           onSubmit={handleRename}
           className="absolute left-2.5 flex items-center gap-x-3"
@@ -66,14 +67,14 @@ function Bar({
             />
           ) : (
             <h2
-              className="text-xl text-white font-bold cursor-pointer pl-3"
+              className="text-xl text-black dark:text-white font-bold cursor-pointer pl-3"
               onClick={() => setName(title)}
             >
               {title}
             </h2>
           )}
           <div
-            className={`text-gray-300 text-sm ${updated ? "opacity-100" : "opacity-0"} transition-opacity!`}
+            className={`text-black dark:text-gray-300 text-sm ${updated ? "opacity-100" : "opacity-0"} transition-opacity!`}
           >
             Form autosaved
           </div>

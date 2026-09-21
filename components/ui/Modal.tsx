@@ -28,14 +28,14 @@ function Modal({ children, closeModal }: ModalProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed top-0 left-0 z-30 w-screen h-screen flex items-center justify-center bg-gray-950/85 backdrop-blur-sm"
+      className="fixed top-0 left-0 z-30 w-screen h-screen flex items-center justify-center bg-gray-200/85 dark:bg-gray-950/85 backdrop-blur-sm"
     >
       <motion.div
         initial={{ scale: 0, y: 100 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0, y: 100 }}
         ref={modalRef}
-        className="w-100 rounded bg-gray-950 border-2 border-gray-700 p-5"
+        className="w-100 rounded bg-gray-200 dark:bg-gray-950 border-2 border-gray-700 p-5"
       >
         {children}
       </motion.div>

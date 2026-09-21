@@ -31,14 +31,18 @@ function Settings({ id, existingSettings }: SettingsProps) {
   return (
     <div className="w-200 mt-8 flex flex-col gap-y-5">
       <div className="border-2 border-gray-700 rounded p-5 flex flex-col gap-y-5 w-full">
-        <h1 className="text-white text-2xl font-bold">Form settings</h1>
-        <p className="text-gray-300">
+        <h1 className="text-black dark:text-white text-2xl font-bold">
+          Form settings
+        </h1>
+        <p className="text-black dark:text-gray-300">
           Manage submission defaults, response options, and other form settings
           here!
         </p>
       </div>
       <div className="border-2 border-gray-700 rounded p-5 flex flex-col gap-y-5 w-full">
-        <h1 className="text-white text-xl font-bold">Presentation</h1>
+        <h1 className="text-black dark:text-white text-xl font-bold">
+          Presentation
+        </h1>
         <div className="flex flex-col gap-y-3">
           <Checkbox
             text="Shuffle questions"
@@ -54,7 +58,7 @@ function Settings({ id, existingSettings }: SettingsProps) {
               setSettings({ ...settings, shuffleOptions })
             }
           />
-          <label className="flex gap-x-3 items-center cursor-pointer text-gray-300 text-sm">
+          <label className="flex gap-x-3 items-center cursor-pointer text-black dark:text-gray-300 text-sm">
             <input
               type="color"
               value={settings.backgroundColor || ""}
@@ -74,7 +78,9 @@ function Settings({ id, existingSettings }: SettingsProps) {
         </div>
       </div>
       <div className="border-2 border-gray-700 rounded p-5 flex flex-col gap-y-5 w-full">
-        <h1 className="text-white text-xl font-bold">Responses</h1>
+        <h1 className="text-black dark:text-white text-xl font-bold">
+          Responses
+        </h1>
         <div className="flex flex-col gap-y-3">
           <Checkbox
             text="Allow submitting another response"

@@ -36,7 +36,7 @@ function Question({
   return (
     <div className="flex rounded border-2 border-gray-700 p-5 gap-x-10">
       <div className="flex flex-col gap-y-5">
-        <h1 className="text-white text-lg font-bold">
+        <h1 className="text-black dark:text-white text-lg font-bold">
           Question {index + 1}{" "}
           {!question.optional && <span className="text-red-500">*</span>}
         </h1>

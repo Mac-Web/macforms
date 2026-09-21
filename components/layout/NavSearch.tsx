@@ -29,8 +29,9 @@ function NavSearch() {
         styles={searching && search.trim().length > 0 ? "rounded-b-none" : ""}
         clear={true}
       />
+      {/* TODO: implement search */}
       {searching && search.trim().length > 0 && (
-        <div className="text-gray-300 p-3 absolute w-full top-full left-0 bg-gray-900 rounded-b">
+        <div className="text-black dark:text-gray-300 p-3 absolute w-full top-full left-0 bg-gray-300 dark:bg-gray-900 rounded-b">
           Search coming soon!
         </div>
       )}

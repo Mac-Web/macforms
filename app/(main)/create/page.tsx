@@ -31,7 +31,7 @@ async function Page() {
 
   return (
     <div>
-      <h1 className="text-4xl text-white text-center font-bold py-10">
+      <h1 className="text-4xl text-black dark:text-white text-center font-bold py-10">
         Create Form
       </h1>
       <NewForm />

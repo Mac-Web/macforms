@@ -49,8 +49,8 @@ function Input({
       />
       {clear && value.length > 0 && (
         <div
-          className="flex items-center justify-center hover:bg-gray-300 hover:dark:bg-gray-800 rounded cursor-pointer 
-                  duration-300 w-7.5 h-7.5 absolute right-2 text-gray-300"
+          className="flex items-center justify-center hover:bg-gray-400/50 hover:dark:bg-gray-800 rounded cursor-pointer 
+                  duration-300 w-7.5 h-7.5 absolute right-2 text-black dark:text-gray-300"
           title="Clear"
           onMouseDown={handleClear}
         >

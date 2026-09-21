@@ -87,20 +87,24 @@ async function Page({ params, searchParams }: PageProps) {
         className="border-2 border-gray-700 rounded p-5 flex flex-col gap-y-5 w-full"
         style={{ backgroundColor: formData.backgroundColor }}
       >
-        <h1 className="text-white text-3xl font-bold">{formData.title}</h1>
+        <h1 className="text-black dark:text-white text-3xl font-bold">
+          {formData.title}
+        </h1>
         {formData.description && (
-          <p className="text-gray-300">{formData.description}</p>
+          <p className="text-black dark:text-gray-300">
+            {formData.description}
+          </p>
         )}
         {formData.quiz && (
           <p
-            className="text-gray-300 text-sm flex items-center gap-x-3"
+            className="text-black dark:text-gray-300 text-sm flex items-center gap-x-3"
             title="This form is a quiz with correct answers"
           >
             <FaQuestionCircle size={17} /> Quiz
           </p>
         )}
         <p
-          className="text-gray-300 text-xs"
+          className="text-black dark:text-gray-300 text-xs"
           title={formData.createdAt!.toISOString()}
         >
           Created {formData.createdAt!.toLocaleDateString()}
@@ -124,7 +128,7 @@ async function Page({ params, searchParams }: PageProps) {
           backgroundColor={formData.backgroundColor}
         />
       ) : (
-        <div className="border-2 border-gray-700 rounded px-5 py-10 flex flex-col gap-y-5 w-full text-gray-300">
+        <div className="border-2 border-gray-700 rounded px-5 py-10 flex flex-col gap-y-5 w-full text-black dark:text-gray-300">
           Sorry, the owner of this form has not opened it to accept responses
           yet.
           <Link href="/" className={linkStyles}>
@@ -137,7 +141,7 @@ async function Page({ params, searchParams }: PageProps) {
           )}
         </div>
       )}
-      <div className="flex flex-col gap-y-3 text-gray-300 text-sm items-center mt-10">
+      <div className="flex flex-col gap-y-3 text-black dark:text-gray-300 text-sm items-center mt-10">
         <Link
           href="/"
           className="flex items-center gap-x-2 text-black dark:text-white text-lg duration-300 py-2 font-bold"
@@ -153,10 +157,7 @@ async function Page({ params, searchParams }: PageProps) {
         </span>
       </div>
       {preview && (
-        <div
-          className="bg-gray-950 rounded border-2 border-gray-700 flex items-center gap-x-3 text-gray-300 px-4 py-2 fixed
-        right-3 top-3"
-        >
+        <div className="bg-gray-200 dark:bg-gray-950 rounded border-2 border-gray-700 flex items-center gap-x-3 text-black dark:text-gray-300 px-4 py-2 fixed right-3 top-3">
           <FaEye size={20} />
           This is a preview of the form
           <Link href={`/forms/${formData.id}`}>

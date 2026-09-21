@@ -20,7 +20,7 @@ function Access({ formId, code }: AccessProps) {
   return canEdit ? (
     <Btn text="Edit form" onclick={accessForm} primary />
   ) : (
-    <div className="text-gray-300">
+    <div className="text-black dark:text-gray-300">
       Sorry, this code is either invalid or expired
     </div>
   );

@@ -18,12 +18,15 @@ function Scores({ scores }: { scores: number[] }) {
       <AnimatePresence>
         {modalOpen && (
           <Modal closeModal={() => setModalOpen(false)}>
-            <h2 className="text-white text-xl font-bold mb-5">
+            <h2 className="text-black dark:text-white text-xl font-bold mb-5">
               All scores ({scores.length})
             </h2>
             <div className="flex flex-col gap-y-2 max-h-100 overflow-auto">
               {scores.map((score, i) => (
-                <div key={i} className="bg-gray-900 rounded px-3 py-1.5">
+                <div
+                  key={i}
+                  className="bg-gray-300 dark:bg-gray-900 rounded px-3 py-1.5"
+                >
                   {score}
                 </div>
               ))}

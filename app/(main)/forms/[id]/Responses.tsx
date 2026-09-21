@@ -57,6 +57,7 @@ async function Responses({ formData }: { formData: FormType }) {
     });
     return total > 0 ? Math.round((correct / total) * 1000) / 10 : 100;
   });
+  //TODO: implement delete response
   const sorted = scores.sort((a, b) => a - b);
   const median =
     scores.length % 2 == 0
@@ -70,15 +71,19 @@ async function Responses({ formData }: { formData: FormType }) {
   return (
     <div className="w-200 mt-8 flex flex-col gap-y-5">
       {formData.quiz && (
-        <div className="text-gray-300 border-gray-700 border-2 rounded p-5 w-full flex flex-col gap-y-3">
-          <h2 className="text-white font-bold text-lg">
+        <div className="text-black dark:text-gray-300 border-gray-700 border-2 rounded p-5 w-full flex flex-col gap-y-3">
+          <h2 className="text-black dark:text-white font-bold text-lg">
             Quiz score distribution ({scores.length} score
             {scores.length === 1 ? "" : "s"})
           </h2>
           <div className="flex gap-x-10">
             <div>
-              <div>Highest score: {Math.max(...scores)}%</div>
-              <div>Lowest score: {Math.min(...scores)}%</div>
+              <div>
+                Highest score: {scores.length > 0 ? Math.max(...scores) : 0}%
+              </div>
+              <div>
+                Lowest score: {scores.length > 0 ? Math.min(...scores) : 0}%
+              </div>
               <div>
                 Average score:{" "}
                 {Math.round(
@@ -88,16 +93,16 @@ async function Responses({ formData }: { formData: FormType }) {
                   }, 0) /
                     scores.length) *
                     10,
-                ) / 10}
+                ) / 10 || 0}
                 %
               </div>
-              <div>Median score: {median}%</div>
+              <div>Median score: {median || 0}%</div>
               <Scores scores={sorted} />
             </div>
             <div className="flex-1 flex text-xs gap-x-2">
               {Array(10)
                 .fill(0)
-                .map((score, i) => {
+                .map((_, i) => {
                   const all = scores.filter(
                     (score) =>
                       score <= 10 * i + 10 &&
@@ -110,7 +115,7 @@ async function Responses({ formData }: { formData: FormType }) {
                       className="flex flex-col items-center gap-y-1 h-30 flex-1 justify-end group cursor-pointer"
                     >
                       <div
-                        className="bg-gray-900 rounded relative flex justify-center w-full"
+                        className="bg-gray-300 dark:bg-gray-900 rounded relative flex justify-center w-full"
                         style={{ height: `${matched}%` }}
                       >
                         <span
@@ -120,7 +125,7 @@ async function Responses({ formData }: { formData: FormType }) {
                           {all} response{all === 1 ? "" : "s"}
                         </span>
                         <span className="absolute bottom-1 text-sm">
-                          {matched}%
+                          {matched || 0}%
                         </span>
                       </div>
                       <div>
@@ -150,10 +155,14 @@ async function Responses({ formData }: { formData: FormType }) {
         return (
           <div
             key={question.id}
-            className="text-gray-300 border-gray-700 border-2 rounded p-5 w-full flex flex-col gap-y-3"
+            className="text-black dark:text-gray-300 border-gray-700 border-2 rounded p-5 w-full flex flex-col gap-y-3"
           >
-            <div className="text-xs text-gray-300">Question {i + 1}</div>
-            <h2 className="text-white font-bold">{question.title}</h2>
+            <div className="text-xs text-black dark:text-gray-300">
+              Question {i + 1}
+            </div>
+            <h2 className="text-black dark:text-white font-bold">
+              {question.title}
+            </h2>
             {question.description && (
               <p className="text-sm">{question.description}</p>
             )}
@@ -167,7 +176,7 @@ async function Responses({ formData }: { formData: FormType }) {
                   return response ? (
                     <div
                       key={response.id}
-                      className="bg-gray-900 rounded px-3 py-1.5"
+                      className="bg-gray-300 dark:bg-gray-900 rounded px-3 py-1.5"
                     >
                       {response.type === "text" && response.text}
                     </div>
@@ -189,7 +198,7 @@ async function Responses({ formData }: { formData: FormType }) {
                       className="flex items-center border-2 relative overflow-hidden rounded py-1.5 px-3 border-gray-700"
                     >
                       <div
-                        className="bg-gray-900 -z-1 absolute h-full top-0 left-0"
+                        className="bg-gray-300 dark:bg-gray-900 -z-1 absolute h-full top-0 left-0"
                         style={{ width: percent + "%" }}
                       />
                       {choice.text}

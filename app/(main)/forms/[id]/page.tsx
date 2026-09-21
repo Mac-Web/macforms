@@ -91,12 +91,12 @@ async function Page({ params, searchParams }: PageProps) {
     <div className="px-5 md:px-20 lg:px-[calc(50%-550px)] flex flex-col items-center">
       {code && !cookieAccess ? (
         <div className="w-150 border-gray-700 rounded border-2 flex flex-col gap-y-5 p-5 mt-5">
-          <h2 className="text-lg text-white font-bold">
+          <h2 className="text-lg text-black dark:text-white font-bold">
             You can use the one-time code {code} to edit the form{" "}
             {formData.title}
           </h2>
           {formData.description && (
-            <p className="text-gray-300">
+            <p className="text-black dark:text-gray-300">
               {formData.description.slice(0, 50) +
                 (formData.description.length > 50 ? "..." : "")}
             </p>

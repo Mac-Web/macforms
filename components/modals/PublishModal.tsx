@@ -61,8 +61,10 @@ function PublishModal({
   return (
     <Modal closeModal={closeModal}>
       <div className="flex flex-col gap-y-5">
-        <h2 className="text-white text-xl font-bold">Publish form</h2>
-        <div className="text-gray-300">
+        <h2 className="text-black dark:text-white text-xl font-bold">
+          Publish form
+        </h2>
+        <div className="text-black dark:text-gray-300">
           {open ? (
             <>
               This form is already published to the internet and can be accessed{" "}
@@ -77,7 +79,7 @@ function PublishModal({
                 <>
                   {" "}
                   using the code{" "}
-                  <span className="bg-gray-900 px-1.5 text-sm font-bold py-0.5 rounded">
+                  <span className="bg-gray-300 dark:bg-gray-900 px-1.5 text-sm font-bold py-0.5 rounded">
                     {code}
                   </span>
                 </>
@@ -90,8 +92,10 @@ function PublishModal({
         </div>
         {open && (
           <div className="flex flex-col gap-y-2 my-3">
-            <h2 className="text-white text-lg font-bold">Share link</h2>
-            <div className="bg-gray-900 px-2 py-1 rounded text-gray-300 whitespace-nowrap overflow-x-auto">
+            <h2 className="text-black dark:text-white text-lg font-bold">
+              Share link
+            </h2>
+            <div className="bg-gray-300 dark:bg-gray-900 px-2 py-1 rounded text-black dark:text-gray-300 whitespace-nowrap overflow-x-auto">
               macforms.macweb.app/{shortened || id}
             </div>
             <Checkbox

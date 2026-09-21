@@ -66,7 +66,7 @@ function getScore(questions: QuestionType[], answers: AnswerType[]) {
       }
     }
   });
-  return `${correct}/${total} (${Math.round((correct / total) * 1000) / 10}%)`;
+  return `${correct}/${total} (${total > 0 ? Math.round((correct / total) * 1000) / 10 : 0}%)`;
 }
 
 interface QuestionsProps {
@@ -176,10 +176,10 @@ function Questions({
     <>
       {submitted ? (
         <div className="w-full border-2 border-gray-700 rounded p-5 flex flex-col gap-y-5">
-          <h2 className="text-white text-lg font-bold">
+          <h2 className="text-black dark:text-white text-lg font-bold">
             Thank you for responding!
           </h2>
-          <p className="text-gray-300">
+          <p className="text-black dark:text-gray-300">
             Your response has been recorded and submitted to the form owner.{" "}
             {!allowEditingResponses &&
               "You are not allowed to edit your response on this form."}{" "}
@@ -193,7 +193,7 @@ function Questions({
               primary
             />
           )}
-          <div className="flex flex-col gap-y-1 text-gray-300">
+          <div className="flex flex-col gap-y-1 text-black dark:text-gray-300">
             {allowEditingResponses && (
               <div
                 onClick={() => window.open(`?edit=${submitted}`, "_self")}
@@ -213,7 +213,7 @@ function Questions({
           </div>
         </div>
       ) : isPrivate && locked ? (
-        <div className="border-2 border-gray-700 rounded px-5 py-10 flex flex-col gap-y-5 w-full text-gray-300">
+        <div className="border-2 border-gray-700 rounded px-5 py-10 flex flex-col gap-y-5 w-full text-black dark:text-gray-300">
           Please enter the access code to fill out this private form
           <form onSubmit={handleAccess} className="flex flex-col gap-y-5">
             <Input
@@ -230,7 +230,7 @@ function Questions({
           </form>
         </div>
       ) : !allowMultipleResponses && !user ? (
-        <div className="flex flex-col gap-y-5 border-2 text-gray-300 border-gray-700 rounded w-full px-5 py-10">
+        <div className="flex flex-col gap-y-5 border-2 text-black dark:text-gray-300 border-gray-700 rounded w-full px-5 py-10">
           This form only collects one response per user, so you have to be
           logged in to fill it out.{" "}
           <Btn
@@ -244,7 +244,7 @@ function Questions({
         userIds &&
         userIds.includes(user.id) &&
         !res ? (
-        <div className="flex flex-col gap-y-5 border-2 text-gray-300 border-gray-700 rounded w-full px-5 py-10">
+        <div className="flex flex-col gap-y-5 border-2 text-black dark:text-gray-300 border-gray-700 rounded w-full px-5 py-10">
           This form only collects one response per user, and you&apos;ve already
           filled it out.
           {allowEditingResponses && (
@@ -263,7 +263,7 @@ function Questions({
             className={`w-full flex flex-col gap-y-5 ${answers && "pointer-events-none"}`}
           >
             {score && (
-              <div className="bg-green-700 px-4 py-1.5 text-white font-bold rounded w-fit">
+              <div className="bg-green-700 px-4 py-1.5 text-black dark:text-white font-bold rounded w-fit">
                 Score: {score}
               </div>
             )}
@@ -280,14 +280,16 @@ function Questions({
 
               return (
                 <div key={question.id} className="flex flex-col gap-y-2">
-                  <div className="text-gray-300 text-sm">Question {i + 1}</div>
+                  <div className="text-black dark:text-gray-300 text-sm">
+                    Question {i + 1}
+                  </div>
                   <div
                     className="border-2 border-gray-700 rounded p-5 flex flex-col gap-y-5"
                     style={{ backgroundColor }}
                   >
                     <div className="flex flex-col gap-y-2">
                       <h2
-                        className="text-white text-lg font-bold"
+                        className="text-black dark:text-white text-lg font-bold"
                         title={question.type}
                       >
                         {question.title}
@@ -299,7 +301,7 @@ function Questions({
                         )}
                       </h2>
                       {question.description && (
-                        <p className="text-gray-300 text-sm">
+                        <p className="text-black dark:text-gray-300 text-sm">
                           {question.description}
                         </p>
                       )}
@@ -367,7 +369,7 @@ function Questions({
                       )}
                     {answers && quiz && question.correct !== undefined && (
                       <div
-                        className={`px-4 py-2 rounded text-gray-300 flex items-center gap-x-3 ${correct ? "bg-green-950/80" : "bg-red-950/80"}`}
+                        className={`px-4 py-2 rounded text-black dark:text-gray-300 flex items-center gap-x-3 ${correct ? "bg-green-200/80 dark:bg-green-950/80" : "bg-red-200/80 dark:bg-red-950/80"}`}
                       >
                         {correct ? (
                           <>
@@ -404,10 +406,10 @@ function Questions({
                 {modalOpen && (
                   <Modal closeModal={() => setModalOpen(false)}>
                     <div className="flex flex-col gap-y-5">
-                      <h2 className="text-white text-xl font-bold">
+                      <h2 className="text-black dark:text-white text-xl font-bold">
                         Clear confirmation
                       </h2>
-                      <p className="text-gray-300">
+                      <p className="text-black dark:text-gray-300">
                         Are you sure you want to clear the form? This will wipe
                         everything you&apos;ve already filled out.
                       </p>

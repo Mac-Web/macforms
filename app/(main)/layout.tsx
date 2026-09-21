@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { ThemeProvider } from "next-themes";
+import NextTopLoader from "nextjs-toploader";
 import Nav from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
 import "../globals.css";
@@ -36,11 +38,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${inter.variable} h-full antialiased`}
+      suppressHydrationWarning
+    >
       <body>
-        <Nav />
-        {children}
-        <Footer />
+        <ThemeProvider attribute="class">
+          <NextTopLoader
+            showSpinner={false}
+            height={2}
+            initialPosition={0.1}
+            shadow={false}
+            template='<div class="bar bg-green-500! dark:bg-green-600!" role="bar"><div class="peg"></div></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>'
+          />
+          <Nav />
+          {children}
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

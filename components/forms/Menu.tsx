@@ -16,7 +16,7 @@ import WarningModal from "../modals/WarningModal";
 import Link from "next/link";
 
 const optionStyles =
-  "flex items-center gap-x-3 px-3 py-1.5 cursor-pointer rounded hover:bg-gray-900";
+  "flex items-center gap-x-3 px-3 py-1.5 cursor-pointer rounded hover:bg-gray-300 dark:hover:bg-gray-900";
 
 interface MenuProps {
   form: Form;
@@ -49,10 +49,13 @@ function Menu({ form, path, userId }: MenuProps) {
   }, []);
 
   return (
-    <div ref={menuRef} className="absolute top-2 right-2 text-gray-300">
+    <div
+      ref={menuRef}
+      className="absolute top-2 right-2 text-black dark:text-gray-300"
+    >
       <FaEllipsisV
         size={30}
-        className="rounded-full p-2 cursor-pointer hover:bg-gray-900"
+        className="rounded-full p-2 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-900"
         onClick={() => setMenuOpen(!menuOpen)}
       />
       <AnimatePresence>
@@ -61,7 +64,7 @@ function Menu({ form, path, userId }: MenuProps) {
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0 }}
-            className="origin-top-right absolute right-0 top-8 bg-gray-950 border-2 border-gray-700 rounded text-sm p-2 flex flex-col gap-y-1"
+            className="origin-top-right absolute right-0 top-8 bg-gray-300 dark:bg-gray-950 border-2 border-gray-700 rounded text-sm p-2 flex flex-col gap-y-1"
           >
             <Link href={`/forms/${form.id}`} className={optionStyles}>
               <FaPen size={17} /> Edit

@@ -9,7 +9,7 @@ interface ChoiceProps {
 
 function Choice({ checked, setChecked, text, checkbox }: ChoiceProps) {
   return (
-    <label className="flex gap-x-3 text-gray-300 items-center cursor-pointer hover:bg-gray-900 px-4 py-2 rounded">
+    <label className="flex gap-x-3 text-black dark:text-gray-300 items-center cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-900 px-4 py-2 rounded">
       <input
         type="checkbox"
         checked={checked}
@@ -17,10 +17,10 @@ function Choice({ checked, setChecked, text, checkbox }: ChoiceProps) {
         className="hidden"
       />
       <div
-        className={`min-w-5 w-5 h-5 ${checkbox ? "rounded" : "rounded-full"} border-2 border-gray-300 justify-center items-center flex`}
+        className={`min-w-5 w-5 h-5 ${checkbox ? "rounded" : "rounded-full"} border-2 border-black dark:border-gray-300 justify-center items-center flex`}
       >
         <div
-          className={`w-2.5 h-2.5 bg-gray-300 ${checkbox ? "rounded-xs" : "rounded-full"} ${checked ? "" : "scale-0"} transition-transform!`}
+          className={`w-2.5 h-2.5 bg-black dark:bg-gray-300 ${checkbox ? "rounded-xs" : "rounded-full"} ${checked ? "" : "scale-0"} transition-transform!`}
         />
       </div>
       {text}

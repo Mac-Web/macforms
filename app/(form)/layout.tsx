@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { ThemeProvider } from "next-themes";
+import NextTopLoader from "nextjs-toploader";
 import "../globals.css";
 
 const inter = Inter({
@@ -18,8 +20,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
-      <body>{children}</body>
+    <html
+      lang="en"
+      className={`${inter.variable} h-full antialiased`}
+      suppressHydrationWarning
+    >
+      <body>
+        <ThemeProvider attribute="class">
+          <NextTopLoader
+            showSpinner={false}
+            height={2}
+            initialPosition={0.1}
+            shadow={false}
+            template='<div class="bar bg-green-500! dark:bg-green-600!" role="bar"><div class="peg"></div></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>'
+          />
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
