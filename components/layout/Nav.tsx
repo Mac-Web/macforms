@@ -11,10 +11,7 @@ async function Nav() {
   const session = await getSession();
 
   return (
-    <nav
-      className="flex items-center justify-between gap-x-3 border-b border-gray-700 px-5 md:px-20 lg:px-[calc(50%-550px)] h-17
-       z-5 sticky top-0 bg-gray-200 dark:bg-gray-950"
-    >
+    <nav className="flex items-center justify-between gap-x-3 border-b border-gray-700 px-5 md:px-20 lg:px-[calc(50%-550px)] h-17 z-50 sticky top-0 bg-gray-200 dark:bg-gray-950">
       <Link
         href="/"
         className="flex items-center gap-x-2 text-black dark:text-white text-lg duration-300 pr-6 py-2 font-bold
@@ -24,7 +21,7 @@ async function Nav() {
         <Image src="/logo.png" alt="MacForms Logo" width={35} height={35} />{" "}
         MacForms
       </Link>
-      <NavSearch />
+      <NavSearch userId={session?.user.id} />
       <div className="flex gap-x-3 items-center">
         <div className="md:flex items-center gap-x-3 hidden">
           <Link href="/create" className={navLinkStyles}>
@@ -33,8 +30,8 @@ async function Nav() {
           <Link href="/forms" className={navLinkStyles}>
             Forms
           </Link>
-          <Link href="/settings" className={navLinkStyles}>
-            Settings
+          <Link href="/browse" className={navLinkStyles}>
+            Browse
           </Link>
         </div>
       </div>

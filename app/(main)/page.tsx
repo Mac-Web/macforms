@@ -12,16 +12,24 @@ export default async function Home() {
         title="Welcome to MacForms!"
         description="A simple and easy to use form creation tool with a ton of features"
       />
-      <Btn
-        text={session ? "Get started" : "Sign in"}
-        link={
-          session
-            ? "/create"
-            : process.env.NEXT_PUBLIC_ROOT_DOMAIN + "?redirect=macforms"
-        }
-        styles={"block mb-10"}
-        primary
-      />
+      <div className="flex gap-x-5 mb-10">
+        <Btn
+          text={session ? "Get started" : "Sign in"}
+          link={
+            session
+              ? "/create"
+              : process.env.NEXT_PUBLIC_ROOT_DOMAIN + "?redirect=macforms"
+          }
+          styles="py-1.5"
+          primary
+        />
+        <Btn
+          text="Learn more"
+          link="https://github.com/Mac-Web/macforms" //TODO: change to actual macweb.app/apps/macforms url
+          styles="py-1.5"
+          blank
+        />
+      </div>
       <div className="flex flex-col gap-y-10 pb-10">
         <div className="flex flex-col gap-y-10 md:flex-row gap-x-20 items-center">
           <Image

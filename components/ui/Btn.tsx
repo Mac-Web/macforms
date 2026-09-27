@@ -10,6 +10,7 @@ interface BtnProps {
   styles?: string;
   warning?: boolean;
   primary?: boolean;
+  blank?: boolean;
 }
 
 function Btn({
@@ -20,6 +21,7 @@ function Btn({
   styles,
   warning,
   primary,
+  blank,
 }: BtnProps) {
   const btnStyles = `${primary ? "bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 font-bold text-black dark:text-white" : "border-gray-600 hover:border-gray-700 text-black dark:text-gray-300"} ${warning && "bg-red-600 hover:bg-red-700 border-red-600 hover:border-red-700"} border-2 w-fit cursor-pointer rounded py-1 px-3.5 text-lg ${styles}`;
 
@@ -28,7 +30,7 @@ function Btn({
       {text}
     </button>
   ) : (
-    <Link href={link!} className={btnStyles}>
+    <Link href={link!} target={blank ? "_blank" : ""} className={btnStyles}>
       {text}
     </Link>
   );
