@@ -60,8 +60,8 @@ function Footer() {
         <Link href="/forms" className={footerLinkStyles}>
           Forms
         </Link>
-        <Link href="/settings" className={footerLinkStyles}>
-          Settings
+        <Link href="/browse" className={footerLinkStyles}>
+          Browse
         </Link>
       </div>
       <div className={footerColumnStyles}>

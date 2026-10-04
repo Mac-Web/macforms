@@ -3,6 +3,7 @@
 import type { Form, Response } from "@/generated/prisma/client";
 import { useState } from "react";
 import { FaArrowsAltV, FaFilter, FaList, FaPlusCircle } from "react-icons/fa";
+import { motion } from "framer-motion";
 import Input from "@/components/ui/Input";
 import Card from "@/components/forms/Card";
 import Dropdown from "@/components/ui/Dropdown";
@@ -104,10 +105,10 @@ function Forms({ forms, userId }: FormsProps) {
         placeholder="Search forms"
         value={search}
         setValue={(s) => setSearch(s)}
-        styles="w-100"
+        styles="w-full sm:w-100"
         clear
       />
-      <div className="flex gap-x-10">
+      <div className="flex gap-x-10 gap-y-5 flex-wrap justify-center">
         <label className={optionStyles}>
           <FaFilter /> Filter by:{" "}
           <Dropdown
@@ -139,22 +140,35 @@ function Forms({ forms, userId }: FormsProps) {
       <div className="flex flex-wrap justify-center gap-5">
         {displayedForms.length > 0 ? (
           <>
-            {displayedForms.map((form) => (
+            {displayedForms.map((form, i) => (
               <Card
                 key={form.id}
                 form={form}
                 shared={form.userId !== userId}
                 userId={userId}
                 length={form.responses.length}
+                index={i}
               />
             ))}
-            <Link
-              href="/create"
-              className="h-auto flex flex-col items-center justify-center text-black dark:text-gray-300 gap-y-3 py-5 border-2 border-dashed border-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-900 w-50"
+
+            <motion.div
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{
+                duration: 0.7,
+                type: "spring",
+                delay: 0.1 * displayedForms.length,
+              }}
+              className="h-auto flex"
             >
-              <FaPlusCircle size={25} />
-              Create form
-            </Link>
+              <Link
+                href="/create"
+                className="h-auto flex flex-col items-center justify-center text-black dark:text-gray-300 gap-y-3 py-5 border-2 border-dashed border-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-900 w-50"
+              >
+                <FaPlusCircle size={25} />
+                Create form
+              </Link>
+            </motion.div>
           </>
         ) : (
           <div className="my-5 text-black dark:text-gray-300">

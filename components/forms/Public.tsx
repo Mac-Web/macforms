@@ -3,6 +3,7 @@
 import type { Form, User } from "@/generated/prisma/client";
 import { SiGoogleforms } from "react-icons/si";
 import { FaQuestionCircle } from "react-icons/fa";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -10,9 +11,19 @@ export type FormType = Form & {
   user: User;
 };
 
-function Public({ form }: { form: FormType }) {
+interface PublicProps {
+  form: FormType;
+  index?: number;
+}
+
+function Public({ form, index }: PublicProps) {
   return (
-    <div className="relative">
+    <motion.div
+      initial={{ y: 50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.7, type: "spring", delay: 0.1 * (index || 0) }}
+      className="relative"
+    >
       <Link
         href={`/${form.id}/`}
         className="h-full border-gray-700 border-2 rounded p-5 flex flex-col gap-y-3 text-black dark:text-gray-300 w-50 hover:bg-gray-300 dark:hover:bg-gray-900"
@@ -54,7 +65,7 @@ function Public({ form }: { form: FormType }) {
           </span>
         </div>
       </Link>
-    </div>
+    </motion.div>
   );
 }
 

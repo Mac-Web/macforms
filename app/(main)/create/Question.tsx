@@ -34,7 +34,7 @@ function Question({
   const hasCorrect = quiz && question.correct !== undefined ? true : false;
 
   return (
-    <div className="flex rounded border-2 border-gray-700 p-5 gap-x-10">
+    <div className="flex flex-col sm:flex-row rounded border-2 border-gray-700 p-5 gap-10">
       <div className="flex flex-col gap-y-5">
         <h1 className="text-black dark:text-white text-lg font-bold">
           Question {index + 1}{" "}
@@ -84,7 +84,7 @@ function Question({
             placeholder="What is this question?"
             value={question.title}
             setValue={(title) => setQuestion({ ...question, title })}
-            styles="w-100"
+            styles="w-full sm:w-100"
           />
         </label>
         <label className={labelStyles}>
@@ -95,7 +95,7 @@ function Question({
             setValue={(description) =>
               setQuestion({ ...question, description })
             }
-            styles="w-100"
+            styles="w-full sm:w-100"
           />
         </label>
       </div>
@@ -110,7 +110,7 @@ function Question({
                   quiz={hasCorrect}
                   correct={hasCorrect ? question.correct : undefined}
                   setCorrect={
-                    (correct) => setQuestion({ ...question, correct }) //TODO: allow more than one correct choices
+                    (correct) => setQuestion({ ...question, correct }) //FIXME: allow more than one correct choices
                   }
                   value={choice}
                   setValue={(value) => {

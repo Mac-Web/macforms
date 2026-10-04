@@ -57,7 +57,7 @@ async function Responses({ formData }: { formData: FormType }) {
     });
     return total > 0 ? Math.round((correct / total) * 1000) / 10 : 100;
   });
-  //TODO: implement delete response
+  //FIXME: implement delete response
   const sorted = scores.sort((a, b) => a - b);
   const median =
     scores.length % 2 == 0
@@ -69,14 +69,14 @@ async function Responses({ formData }: { formData: FormType }) {
   //TODO: tabs/dropdown for individual response and individual question view
 
   return (
-    <div className="w-200 mt-8 flex flex-col gap-y-5">
+    <div className="w-full lg:w-200 mt-8 flex flex-col gap-y-5">
       {formData.quiz && (
         <div className="text-black dark:text-gray-300 border-gray-700 border-2 rounded p-5 w-full flex flex-col gap-y-3">
           <h2 className="text-black dark:text-white font-bold text-lg">
             Quiz score distribution ({scores.length} score
             {scores.length === 1 ? "" : "s"})
           </h2>
-          <div className="flex gap-x-10">
+          <div className="flex gap-10 flex-col md:flex-row">
             <div>
               <div>
                 Highest score: {scores.length > 0 ? Math.max(...scores) : 0}%

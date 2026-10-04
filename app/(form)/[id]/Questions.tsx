@@ -284,12 +284,12 @@ function Questions({
                     Question {i + 1}
                   </div>
                   <div
-                    className="border-2 border-gray-700 rounded p-5 flex flex-col gap-y-5"
+                    className="border-2 border-gray-700 rounded py-5 px-3 flex flex-col gap-y-5"
                     style={{ backgroundColor }}
                   >
                     <div className="flex flex-col gap-y-2">
                       <h2
-                        className="text-black dark:text-white text-lg font-bold"
+                        className="text-black dark:text-white text-lg font-bold px-3"
                         title={question.type}
                       >
                         {question.title}
@@ -301,13 +301,13 @@ function Questions({
                         )}
                       </h2>
                       {question.description && (
-                        <p className="text-black dark:text-gray-300 text-sm">
+                        <p className="text-black dark:text-gray-300 text-sm px-3">
                           {question.description}
                         </p>
                       )}
                     </div>
                     {question.type === "text" && answer.type === "text" && (
-                      <label>
+                      <label className="px-3">
                         <Input
                           placeholder={question.placeholder}
                           value={answer.text}

@@ -12,6 +12,7 @@ import {
   FaLock,
 } from "react-icons/fa";
 import { starForm } from "@/app/(main)/forms/actions";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import Menu from "./Menu";
 
@@ -20,16 +21,22 @@ interface CardProps {
   shared?: boolean;
   userId: string;
   length: number;
+  index?: number;
 }
 
-function Card({ form, shared, userId, length }: CardProps) {
+function Card({ form, shared, userId, length, index }: CardProps) {
   async function handleStar(e: React.MouseEvent) {
     e.preventDefault();
     await starForm(form.id, !form.starred, "/forms");
   }
 
   return (
-    <div className="relative">
+    <motion.div
+      initial={{ y: 50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.7, type: "spring", delay: 0.1 * (index || 0) }}
+      className="relative"
+    >
       <Link
         href={`/forms/${form.id}`}
         className="h-full border-gray-700 border-2 rounded p-5 flex flex-col gap-y-3 text-black dark:text-gray-300 w-50 hover:bg-gray-300 dark:hover:bg-gray-900"
@@ -87,7 +94,7 @@ function Card({ form, shared, userId, length }: CardProps) {
         </div>
       </Link>
       <Menu form={form} path="/forms" userId={userId} />
-    </div>
+    </motion.div>
   );
 }
 

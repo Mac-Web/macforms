@@ -22,13 +22,15 @@ function Forms({ forms }: { forms: FormType[] }) {
         placeholder="Search forms"
         value={search}
         setValue={(s) => setSearch(s)}
-        styles="w-100"
+        styles="w-full sm:w-100"
         clear
       />
-      {/* TODO: add sort/filter dropdowns */}
-      <div className="text-black dark:text-gray-300 flex gap-5 flex-wrap">
+      {/* FIXME: add sort/filter dropdowns */}
+      <div className="text-black dark:text-gray-300 flex gap-5 flex-wrap justify-center">
         {displayForms.length > 0 ? (
-          displayForms.map((form) => <Public key={form.id} form={form} />)
+          displayForms.map((form, i) => (
+            <Public key={form.id} form={form} index={i} />
+          ))
         ) : (
           <div className="text-gray-800 dark:text-gray-300 py-10">
             {forms.length > 0

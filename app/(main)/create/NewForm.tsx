@@ -151,7 +151,7 @@ function NewForm({ formData, userId, setUpdated }: NewFormProps) {
   }, [formData]);
 
   return (
-    <div className="w-200 mx-auto flex flex-col gap-y-5">
+    <div className="w-full lg:w-200 mx-auto flex flex-col gap-y-5">
       <div className="flex flex-col gap-y-5 rounded border-2 border-gray-700 p-5">
         <h1 className="text-black dark:text-white text-lg font-bold">
           {formData ? "Edit form" : "Form information"}
@@ -171,7 +171,7 @@ function NewForm({ formData, userId, setUpdated }: NewFormProps) {
                 return { ...prev, title };
               })
             }
-            styles="w-100"
+            styles="w-full sm:w-100"
           />
         </label>
         <label className={labelStyles}>
@@ -184,7 +184,7 @@ function NewForm({ formData, userId, setUpdated }: NewFormProps) {
                 return { ...prev, description };
               })
             }
-            styles="w-100"
+            styles="w-full w-100"
           />
         </label>
         <Checkbox
@@ -318,6 +318,7 @@ function NewForm({ formData, userId, setUpdated }: NewFormProps) {
           onclick={() => handleSave()}
           primary
         />
+        {!formData && <Btn text="Cancel" link="/forms" />}
         {formData && formData.userId === userId && (
           <>
             <Btn

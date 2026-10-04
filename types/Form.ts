@@ -33,7 +33,7 @@ export interface ResponseType {
 export type QuestionTypeMap = {
   multiple: {
     choices: ChoiceType[];
-    multiple?: boolean;
+    multiple?: boolean; //FIXME: add multi select
   };
   text: {
     placeholder: string;

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import Animate from "@/components/layout/Animate";
 import NextTopLoader from "nextjs-toploader";
 import Nav from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
@@ -53,7 +54,7 @@ export default function RootLayout({
             template='<div class="bar bg-green-500! dark:bg-green-600!" role="bar"><div class="peg"></div></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>'
           />
           <Nav />
-          {children}
+          <Animate>{children}</Animate>
           <Footer />
         </ThemeProvider>
       </body>

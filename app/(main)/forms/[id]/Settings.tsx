@@ -29,7 +29,7 @@ function Settings({ id, existingSettings }: SettingsProps) {
   }
 
   return (
-    <div className="w-200 mt-8 flex flex-col gap-y-5">
+    <div className="w-full lg:w-200 mt-8 flex flex-col gap-y-5">
       <div className="border-2 border-gray-700 rounded p-5 flex flex-col gap-y-5 w-full">
         <h1 className="text-black dark:text-white text-2xl font-bold">
           Form settings

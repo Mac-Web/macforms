@@ -9,7 +9,7 @@ interface ChoiceProps {
 
 function Choice({ checked, setChecked, text, checkbox }: ChoiceProps) {
   return (
-    <label className="flex gap-x-3 text-black dark:text-gray-300 items-center cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-900 px-4 py-2 rounded">
+    <label className="flex gap-x-3 text-black dark:text-gray-300 items-center cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-900 px-3 py-2 rounded">
       <input
         type="checkbox"
         checked={checked}

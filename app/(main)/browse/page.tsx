@@ -36,7 +36,7 @@ async function Page() {
   });
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="px-5 md:px-20 flex flex-col items-center">
       <Hero
         title="Browse Forms"
         description="Browse and explore public forms other people created on MacForms!"

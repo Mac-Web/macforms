@@ -30,7 +30,7 @@ async function Page() {
   if (!session) redirect("/");
 
   return (
-    <div>
+    <div className="px-5 md:px-20">
       <h1 className="text-4xl text-black dark:text-white text-center font-bold py-10">
         Create Form
       </h1>

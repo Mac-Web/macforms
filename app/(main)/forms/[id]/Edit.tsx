@@ -29,8 +29,8 @@ function Edit({ formData, users, userId }: EditProps) {
         isOwner={userId === formData.userId}
         updated={updated}
       />
-      <div className="w-200 mt-8 flex flex-col gap-y-5">
-        <NewForm formData={formData} setUpdated={setUpdated} />
+      <div className="w-full lg:w-200 mt-8 flex flex-col gap-y-5">
+        <NewForm formData={formData} userId={userId} setUpdated={setUpdated} />
       </div>
     </>
   );

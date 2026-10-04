@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface DropdownProps {
   text?: string;
@@ -40,26 +41,32 @@ function Dropdown({
       >
         {selected}
       </div>
-      {menuOpen && (
-        <div
-          className="absolute top-[calc(100%+5px)] z-50 w-full left-0 bg-gray-200 dark:bg-gray-950 border-2 border-gray-700 flex 
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.7, type: "spring" }}
+            className="origin-top absolute top-[calc(100%+5px)] z-50 w-full left-0 bg-gray-200 dark:bg-gray-950 border-2 border-gray-700 flex 
         flex-col p-2 rounded"
-        >
-          {text && <div>{text}</div>}
-          {values.map((v, i) => (
-            <div
-              key={i}
-              onClick={() => {
-                setSelected(v);
-                setMenuOpen(false);
-              }}
-              className={`p-2 hover:bg-gray-300 dark:hover:bg-gray-900 rounded cursor-pointer ${selected === v && "font-bold text-green-500"}`}
-            >
-              {v}
-            </div>
-          ))}
-        </div>
-      )}
+          >
+            {text && <div>{text}</div>}
+            {values.map((v, i) => (
+              <div
+                key={i}
+                onClick={() => {
+                  setSelected(v);
+                  setMenuOpen(false);
+                }}
+                className={`p-2 hover:bg-gray-300 dark:hover:bg-gray-900 rounded cursor-pointer ${selected === v && "font-bold text-green-500"}`}
+              >
+                {v}
+              </div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

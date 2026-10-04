@@ -82,89 +82,91 @@ async function Page({ params, searchParams }: PageProps) {
   }, []);
 
   return (
-    <div className="w-200 mx-auto py-10 flex flex-col gap-y-10 items-center">
-      <div
-        className="border-2 border-gray-700 rounded p-5 flex flex-col gap-y-5 w-full"
-        style={{ backgroundColor: formData.backgroundColor }}
-      >
-        <h1 className="text-black dark:text-white text-3xl font-bold">
-          {formData.title}
-        </h1>
-        {formData.description && (
-          <p className="text-black dark:text-gray-300">
-            {formData.description}
-          </p>
-        )}
-        {formData.quiz && (
-          <p
-            className="text-black dark:text-gray-300 text-sm flex items-center gap-x-3"
-            title="This form is a quiz with correct answers"
-          >
-            <FaQuestionCircle size={17} /> Quiz
-          </p>
-        )}
-        <p
-          className="text-black dark:text-gray-300 text-xs"
-          title={formData.createdAt!.toISOString()}
+    <div className="px-5 md:px-10">
+      <div className="w-full lg:w-200 mx-auto py-10 flex flex-col gap-y-10 items-center">
+        <div
+          className="border-2 border-gray-700 rounded p-5 flex flex-col gap-y-5 w-full"
+          style={{ backgroundColor: formData.backgroundColor }}
         >
-          Created {formData.createdAt!.toLocaleDateString()}
-        </p>
-      </div>
-      {formData.open || (canView && preview) ? (
-        <Questions
-          questions={formData.questions}
-          formId={formData.id}
-          res={response || null}
-          answers={answers || null}
-          quiz={formData.quiz}
-          preview={preview}
-          isPrivate={formData.private}
-          shuffleQuestions={formData.shuffleQuestions}
-          shuffleOptions={formData.shuffleOptions}
-          allowEditingResponses={formData.allowEditingResponses}
-          allowMultipleResponses={formData.allowMultipleResponses}
-          user={session?.user}
-          userIds={userIds}
-          backgroundColor={formData.backgroundColor}
-        />
-      ) : (
-        <div className="border-2 border-gray-700 rounded px-5 py-10 flex flex-col gap-y-5 w-full text-black dark:text-gray-300">
-          Sorry, the owner of this form has not opened it to accept responses
-          yet.
-          <Link href="/" className={linkStyles}>
-            Go back to MacForms
-          </Link>
-          {canView && (
-            <Link href="?preview=true" className={linkStyles}>
-              Go to preview (owner and collaborators only)
-            </Link>
+          <h1 className="text-black dark:text-white text-3xl font-bold">
+            {formData.title}
+          </h1>
+          {formData.description && (
+            <p className="text-black dark:text-gray-300">
+              {formData.description}
+            </p>
           )}
+          {formData.quiz && (
+            <p
+              className="text-black dark:text-gray-300 text-sm flex items-center gap-x-3"
+              title="This form is a quiz with correct answers"
+            >
+              <FaQuestionCircle size={17} /> Quiz
+            </p>
+          )}
+          <p
+            className="text-black dark:text-gray-300 text-xs"
+            title={formData.createdAt!.toISOString()}
+          >
+            Created {formData.createdAt!.toLocaleDateString()}
+          </p>
         </div>
-      )}
-      <div className="flex flex-col gap-y-3 text-black dark:text-gray-300 text-sm items-center mt-10">
-        <Link
-          href="/"
-          className="flex items-center gap-x-2 text-black dark:text-white text-lg duration-300 py-2 font-bold"
-        >
-          <Image src="/logo.png" alt="MacForms Logo" width={35} height={35} />{" "}
-          MacForms
-        </Link>
-        <span>
-          &copy; {new Date().getFullYear()}{" "}
-          <a href="https://macweb.app" target="_blank" className="underline">
-            MacWeb
-          </a>
-        </span>
-      </div>
-      {preview && (
-        <div className="bg-gray-200 dark:bg-gray-950 rounded border-2 border-gray-700 flex items-center gap-x-3 text-black dark:text-gray-300 px-4 py-2 fixed right-3 top-3">
-          <FaEye size={20} />
-          This is a preview of the form
-          <Link href={`/forms/${formData.id}`}>
-            <FaXmark size={20} title="Go back" />
+        {formData.open || (canView && preview) ? (
+          <Questions
+            questions={formData.questions}
+            formId={formData.id}
+            res={response || null}
+            answers={answers || null}
+            quiz={formData.quiz}
+            preview={preview}
+            isPrivate={formData.private}
+            shuffleQuestions={formData.shuffleQuestions}
+            shuffleOptions={formData.shuffleOptions}
+            allowEditingResponses={formData.allowEditingResponses}
+            allowMultipleResponses={formData.allowMultipleResponses}
+            user={session?.user}
+            userIds={userIds}
+            backgroundColor={formData.backgroundColor}
+          />
+        ) : (
+          <div className="border-2 border-gray-700 rounded px-5 py-10 flex flex-col gap-y-5 w-full text-black dark:text-gray-300">
+            Sorry, the owner of this form has not opened it to accept responses
+            yet.
+            <Link href="/" className={linkStyles}>
+              Go back to MacForms
+            </Link>
+            {canView && (
+              <Link href="?preview=true" className={linkStyles}>
+                Go to preview (owner and collaborators only)
+              </Link>
+            )}
+          </div>
+        )}
+        <div className="flex flex-col gap-y-3 text-black dark:text-gray-300 text-sm items-center mt-10">
+          <Link
+            href="/"
+            className="flex items-center gap-x-2 text-black dark:text-white text-lg duration-300 py-2 font-bold"
+          >
+            <Image src="/logo.png" alt="MacForms Logo" width={35} height={35} />{" "}
+            MacForms
           </Link>
+          <span>
+            &copy; {new Date().getFullYear()}{" "}
+            <a href="https://macweb.app" target="_blank" className="underline">
+              MacWeb
+            </a>
+          </span>
         </div>
-      )}
+        {preview && (
+          <div className="bg-gray-200 dark:bg-gray-950 rounded border-2 border-gray-700 flex items-center gap-x-3 text-black dark:text-gray-300 px-4 py-2 fixed right-3 top-3">
+            <FaEye size={20} />
+            This is a preview of the form
+            <Link href={`/forms/${formData.id}`}>
+              <FaXmark size={20} title="Go back" />
+            </Link>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

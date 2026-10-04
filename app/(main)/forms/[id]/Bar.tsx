@@ -52,10 +52,10 @@ function Bar({
 
   return (
     <div className="sticky top-20 w-full z-10">
-      <div className="w-full p-2.5 border-2 bg-gray-200 dark:bg-gray-950 border-gray-700 relative rounded flex justify-center items-center">
+      <div className="w-full p-2.5 border-2 bg-gray-200 dark:bg-gray-950 border-gray-700 relative rounded flex justify-center items-center flex-wrap gap-2">
         <form
           onSubmit={handleRename}
-          className="absolute left-2.5 flex items-center gap-x-3"
+          className="sm:absolute left-2.5 flex items-center gap-x-3"
         >
           {name !== null ? (
             <Input
@@ -98,7 +98,7 @@ function Bar({
             );
           })}
         </div>
-        <div className="absolute right-2.5 flex gap-x-2">
+        <div className="md:absolute right-2.5 flex gap-x-2">
           {isOwner && (
             <Btn
               text="Invite"
