@@ -30,6 +30,7 @@ export async function submitForm(formId: string, response: ResponseType) {
         const newResponse = await prisma.response.upsert({
           where: { id: response.id },
           update: {
+            updatedAt: new Date(),
             answers: {
               update: response.answers.map((answer) => {
                 return {

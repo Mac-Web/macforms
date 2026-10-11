@@ -60,7 +60,7 @@ export type QuestionType = {
     title: string;
     description?: string;
     optional?: boolean;
-    correct?: string;
+    correct?: string[];
     type: K;
   } & QuestionTypeMap[K];
 }[Question];

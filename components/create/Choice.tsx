@@ -10,8 +10,8 @@ interface ChoiceProps {
   index: number;
   value: ChoiceType;
   quiz?: boolean;
-  correct?: string;
-  setCorrect?: (correct: string | undefined) => void;
+  correct?: string[];
+  setCorrect?: (correct: string[] | undefined) => void;
   setValue: (value: ChoiceType) => void;
   removeChoice: (() => void) | null;
 }
@@ -52,8 +52,14 @@ function Choice({
       {quiz && (
         <Checkbox
           text="Correct"
-          checked={correct === value.id}
-          setChecked={(v) => setCorrect!(v ? value.id : "")}
+          checked={correct!.includes(value.id)}
+          setChecked={(v) =>
+            setCorrect!(
+              v
+                ? [...correct!, value.id]
+                : correct!.filter((c) => c !== value.id),
+            )
+          }
         />
       )}
     </label>

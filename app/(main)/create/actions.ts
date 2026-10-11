@@ -23,7 +23,7 @@ export async function createForm(formData: FormType) {
                 description,
                 optional,
                 type,
-                correct,
+                correct: correct ? correct.join(",") : undefined,
                 config:
                   type === "text"
                     ? JSON.stringify({ placeholder: q.placeholder })
@@ -77,7 +77,7 @@ export async function editForm(formData: FormType, auto?: boolean) {
                 description,
                 optional,
                 type,
-                correct,
+                correct: correct ? correct.join(",") : null,
                 config:
                   type === "text"
                     ? JSON.stringify({ placeholder: q.placeholder })

@@ -55,7 +55,7 @@ export async function getFormData(id: string): Promise<FormType | void> {
               title,
               description: description || undefined,
               optional,
-              correct: correct || undefined,
+              correct: correct ? correct.split(",") : undefined,
             };
             const json = JSON.parse(config as string);
             return type === "multiple"

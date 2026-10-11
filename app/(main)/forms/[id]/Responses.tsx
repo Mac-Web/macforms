@@ -8,6 +8,12 @@ export interface QuestionResponseType {
   responses: (AnswerType | undefined)[];
 }
 
+export interface ResponseScoreType {
+  id: string;
+  score: number;
+  total: number;
+}
+
 async function Responses({ formData }: { formData: FormType }) {
   const responseData = await prisma.response.findMany({
     where: { formId: formData.id },
@@ -17,7 +23,7 @@ async function Responses({ formData }: { formData: FormType }) {
   const responses: ResponseType[] = responseData.map((res) => {
     return {
       ...res,
-      name: res.user?.name || `Anonymous ${++counter}`,
+      name: ++counter + ": " + (res.user?.name || "Anonymous"),
       answers: res.answers.map((answer) => {
         return answer.type === "multiple"
           ? {
@@ -41,6 +47,7 @@ async function Responses({ formData }: { formData: FormType }) {
       }),
     };
   });
+  const responseScores: ResponseScoreType[] = [];
   const scores = responses.map((response) => {
     let correct = 0;
     let total = 0;
@@ -53,16 +60,18 @@ async function Responses({ formData }: { formData: FormType }) {
         if (
           answer &&
           ((answer.type === "multiple" &&
-            answer.choices[0] === question.correct) ||
+            question.correct!.includes(answer.choices[0])) ||
             (answer.type === "text" &&
               answer.text.trim().toLowerCase() ===
-                question.correct.trim().toLowerCase()))
+                question.correct![0].trim().toLowerCase()))
         ) {
           correct++;
         }
       }
     });
-    return total > 0 ? Math.round((correct / total) * 1000) / 10 : 100;
+    const res = total > 0 ? Math.round((correct / total) * 1000) / 10 : 100;
+    responseScores.push({ id: response.id, score: res, total });
+    return res;
   });
   const sorted = scores.sort((a, b) => a - b);
   const median =
@@ -146,6 +155,7 @@ async function Responses({ formData }: { formData: FormType }) {
         formData={formData}
         questionResponses={questionResponses}
         responses={responses}
+        responseScores={responseScores}
       />
     </div>
   );

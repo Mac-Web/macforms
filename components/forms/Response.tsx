@@ -1,7 +1,10 @@
 "use client";
 
 import type { FormType, ResponseType } from "@/types/Form";
-import type { QuestionResponseType } from "@/app/(main)/forms/[id]/Responses";
+import type {
+  QuestionResponseType,
+  ResponseScoreType,
+} from "@/app/(main)/forms/[id]/Responses";
 import { useState, useEffect } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { AnimatePresence } from "framer-motion";
@@ -13,9 +16,15 @@ interface ResponseProps {
   formData: FormType;
   questionResponses: QuestionResponseType[];
   responses: ResponseType[];
+  responseScores: ResponseScoreType[];
 }
 
-function Response({ formData, questionResponses, responses }: ResponseProps) {
+function Response({
+  formData,
+  questionResponses,
+  responses,
+  responseScores,
+}: ResponseProps) {
   const [response, setResponse] = useState<ResponseType | null>(null);
   const [deleting, setDeleting] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -35,7 +44,7 @@ function Response({ formData, questionResponses, responses }: ResponseProps) {
 
   return (
     <div className="flex flex-col gap-y-5">
-      <div className="flex items-center gap-x-5">
+      <div className="flex items-center gap-x-5 text-sm">
         <Dropdown
           text="Respondent"
           selected={response?.name || "All"}
@@ -45,13 +54,38 @@ function Response({ formData, questionResponses, responses }: ResponseProps) {
           values={["All", ...responses.map((r) => r.name as string)]}
           width={150}
         />
+        {response && formData.quiz && (
+          <>
+            <div title="Quiz score/accuracy">
+              {Math.round(
+                (responseScores[0].total / 100) *
+                  responseScores.find((s) => s.id === response.id)!.score,
+              )}
+              /{responseScores[0].total}
+            </div>
+            <div title="Quiz score/accuracy">
+              {responseScores.find((s) => s.id === response.id)!.score}%
+            </div>
+          </>
+        )}
         {response && (
-          <div
-            onClick={() => setDeleting(true)}
-            className="text-red-500 text-sm cursor-pointer hover:underline"
-          >
-            Delete response
-          </div>
+          <>
+            <div title={response.createdAt?.toISOString()}>
+              Submitted at {response.createdAt?.toLocaleDateString()}
+            </div>
+            {response.updatedAt?.getTime() !==
+              response.createdAt?.getTime() && (
+              <div title={response.createdAt?.toISOString()}>
+                Edited at {response.createdAt?.toLocaleDateString()}
+              </div>
+            )}
+            <div
+              onClick={() => setDeleting(true)}
+              className="text-red-500 cursor-pointer hover:underline"
+            >
+              Delete response
+            </div>
+          </>
         )}
       </div>
       {formData.questions.map((question, i) => {

@@ -29,6 +29,14 @@ model User {
   responses     Response[]
   taskLists     TaskList[]
   tasks         Task[]
+  subtasks      Subtask[]
+  tags          Tag[]
+  folders       Folder[]
+  projects      Project[]
+  notes         Note[]
+
+  macIdeasSettingsId String?
+  macIdeasSettings   MacIdeasSettings?
 
   @@map("user")
 }
@@ -146,31 +154,142 @@ model Answer {
 }
 
 model TaskList {
-  id          String  @id @default(uuid())
-  name        String
-  emoji       String?
-  starred     Boolean @default(false)
-  description String?
+  id              String  @id @default(uuid())
+  name            String
+  emoji           String?
+  starred         Boolean @default(false)
+  description     String?
+  backgroundColor String?
+  backgroundImage String?
 
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tasks  Task[]
+  userId   String
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  folderId String?
+  folder   Folder?   @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  tasks    Task[]
+  projects Project[] @relation(name: "project task lists")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Task {
-  id          String  @id @default(uuid())
-  text        String
-  description String?
-  completed   Boolean @default(false)
-  starred     Boolean @default(false)
+  id           String    @id @default(uuid())
+  text         String
+  description  String?
+  completed    Boolean   @default(false)
+  starred      Boolean   @default(false)
+  start        DateTime?
+  due          DateTime?
+  priority     String?
+  myDay        Boolean   @default(false)
+  myDayVisible Boolean   @default(true)
 
   userId     String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  taskListId String
-  taskList   TaskList @relation(fields: [taskListId], references: [id], onDelete: Cascade)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taskListId String?
+  taskList   TaskList? @relation(fields: [taskListId], references: [id], onDelete: Cascade)
+  tags       Tag[]     @relation(name: "tags")
+  projects   Project[] @relation(name: "project tasks")
+  subtasks   Subtask[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Tag {
+  id    String  @id @default(uuid())
+  name  String
+  emoji String?
+  color String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks  Task[] @relation(name: "tags")
+  notes  Note[] @relation(name: "note tags")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Folder {
+  id    String  @id @default(uuid())
+  name  String
+  color String?
+
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taskLists TaskList[]
+  projects  Project[]  @relation(name: "project folders")
+  notes     Note[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Subtask {
+  id        String  @id @default(uuid())
+  text      String
+  completed Boolean @default(false)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MacIdeasSettings {
+  id            String  @id @default(uuid())
+  selected      Int[]   @default([0, 1, 2, 3, 4, 5, 6])
+  selectedNotes Int[]   @default([0, 1, 2])
+  showCompleted Boolean @default(false)
+  showOverdue   Boolean @default(false)
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Project {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+  color       String?
+  emoji       String?
+  starred     Boolean @default(false)
+
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks     Task[]     @relation(name: "project tasks")
+  taskLists TaskList[] @relation(name: "project task lists")
+  folders   Folder[]   @relation(name: "project folders")
+  notes     Note[]     @relation(name: "project notes")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Note {
+  id              String  @id @default(uuid())
+  name            String
+  content         String
+  description     String?
+  starred         Boolean @default(false)
+  emoji           String?
+  backgroundColor String?
+  backgroundImage String?
+
+  userId   String
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  folderId String?
+  folder   Folder?   @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  projects Project[] @relation(name: "project notes")
+  tags     Tag[]     @relation(name: "note tags") //TODO: actually implement tags
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -42,7 +42,7 @@ function NewForm({ formData, userId, setUpdated }: NewFormProps) {
           id: 0,
           title: "",
           type: "multiple",
-          correct: "",
+          correct: [],
           choices: [{ id: crypto.randomUUID(), text: "" }],
         },
       ],
@@ -93,7 +93,7 @@ function NewForm({ formData, userId, setUpdated }: NewFormProps) {
       if (
         form.quiz &&
         question.correct !== undefined &&
-        (!question.correct || question.correct.trim().length == 0)
+        (!question.correct || question.correct.length == 0)
       ) {
         return invalid(
           `Please provide a correct answer for question ${i + 1}, or mark it as not having a correct answer`,
@@ -300,7 +300,7 @@ function NewForm({ formData, userId, setUpdated }: NewFormProps) {
                   id: prev.questions.length,
                   title: "",
                   type: "multiple",
-                  correct: "",
+                  correct: [],
                   choices: [{ id: crypto?.randomUUID(), text: "" }],
                 },
               ],

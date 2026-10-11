@@ -58,9 +58,10 @@ function getScore(questions: QuestionType[], answers: AnswerType[]) {
       total++;
       const answer = answers.find((a) => a.questionId === q.id)!;
       if (
-        (answer.type === "multiple" && answer.choices[0] === q.correct) ||
+        (answer.type === "multiple" && q.correct.includes(answer.choices[0])) ||
         (answer.type === "text" &&
-          answer.text.trim().toLowerCase() === q.correct.trim().toLowerCase())
+          answer.text.trim().toLowerCase() ===
+            q.correct![0].trim().toLowerCase())
       ) {
         correct++;
       }
@@ -272,11 +273,13 @@ function Questions({
                 (a) => a.questionId === question.id,
               ) as AnswerType;
               const correct =
-                (answer.type === "multiple" &&
-                  question.correct === answer.choices[0]) ||
-                (answer.type === "text" &&
-                  question.correct?.trim().toLowerCase() ===
-                    answer.text.trim().toLowerCase());
+                question.correct === undefined
+                  ? undefined
+                  : (answer.type === "multiple" &&
+                      question.correct?.includes(answer.choices[0])) ||
+                    (answer.type === "text" &&
+                      question.correct![0].trim().toLowerCase() ===
+                        answer.text.trim().toLowerCase());
 
               return (
                 <div key={question.id} className="flex flex-col gap-y-2">

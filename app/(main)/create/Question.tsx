@@ -49,7 +49,7 @@ function Question({
             setSelected={(type) => {
               const selectedType = type.toLowerCase() as QType;
               const { id, title, description, optional } = question;
-              const base = { id, title, description, optional, correct: "" };
+              const base = { id, title, description, optional, correct: [] };
               if (selectedType === "multiple") {
                 setQuestion({
                   ...base,
@@ -109,8 +109,8 @@ function Question({
                   index={i}
                   quiz={hasCorrect}
                   correct={hasCorrect ? question.correct : undefined}
-                  setCorrect={
-                    (correct) => setQuestion({ ...question, correct }) //FIXME: allow more than one correct choices
+                  setCorrect={(correct) =>
+                    setQuestion({ ...question, correct })
                   }
                   value={choice}
                   setValue={(value) => {
@@ -176,8 +176,8 @@ function Question({
                 </div>
                 <Input
                   placeholder="What's the right answer?"
-                  value={question.correct || ""}
-                  setValue={(correct) => setQuestion({ ...question, correct })}
+                  value={question.correct ? question.correct[0] : ""}
+                  setValue={(c) => setQuestion({ ...question, correct: [c] })}
                 />
               </label>
             )}
@@ -193,7 +193,7 @@ function Question({
             text="Has correct answer"
             checked={hasCorrect}
             setChecked={(value) =>
-              setQuestion({ ...question, correct: value ? "" : undefined })
+              setQuestion({ ...question, correct: value ? [] : undefined })
             }
           />
         )}
