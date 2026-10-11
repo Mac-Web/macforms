@@ -26,6 +26,7 @@ export interface ResponseType {
   id: string;
   formId: string;
   answers: AnswerType[];
+  name?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

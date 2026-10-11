@@ -9,6 +9,7 @@ interface DropdownProps {
   setSelected: (s: string) => void;
   values: string[];
   styles?: string;
+  width?: number;
 }
 
 function Dropdown({
@@ -17,6 +18,7 @@ function Dropdown({
   setSelected,
   values,
   styles,
+  width,
 }: DropdownProps) {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -34,7 +36,11 @@ function Dropdown({
   }, []);
 
   return (
-    <div ref={menuRef} className="relative">
+    <div
+      ref={menuRef}
+      className="relative"
+      style={{ width: width ? width + "px" : undefined }}
+    >
       <div
         onClick={() => setMenuOpen(!menuOpen)}
         className={`rounded border-2 border-gray-700 px-4 py-2 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-900 text-sm font-bold ${styles}`}
@@ -48,8 +54,7 @@ function Dropdown({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.7, type: "spring" }}
-            className="origin-top absolute top-[calc(100%+5px)] z-50 w-full left-0 bg-gray-200 dark:bg-gray-950 border-2 border-gray-700 flex 
-        flex-col p-2 rounded"
+            className="origin-top absolute top-[calc(100%+5px)] z-50 w-full left-0 bg-gray-200 dark:bg-gray-950 border-2 border-gray-700 flex max-h-80 overflow-y-auto flex-col p-2 rounded"
           >
             {text && <div>{text}</div>}
             {values.map((v, i) => (

@@ -166,3 +166,18 @@ export async function saveSettings(formId: string, settings: SettingsType) {
     console.error("Error: " + err);
   }
 }
+
+export async function deleteReponse(responseId: string, formId: string) {
+  try {
+    const session = await getSession();
+    if (session) {
+      const deleted = await prisma.response.delete({
+        where: { id: responseId, form: { userId: session.user.id } },
+      });
+      console.log(deleted);
+      revalidatePath(`/forms/${formId}?tab=responses`);
+    }
+  } catch (err) {
+    console.error("Error: " + err);
+  }
+}

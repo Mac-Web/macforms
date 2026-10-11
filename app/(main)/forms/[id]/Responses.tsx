@@ -1,16 +1,23 @@
-import type { FormType, ResponseType } from "@/types/Form";
+import type { AnswerType, FormType, ResponseType } from "@/types/Form";
 import { prisma } from "@/lib/prisma";
-import { FaCheckCircle } from "react-icons/fa";
+import Response from "@/components/forms/Response";
 import Scores from "@/components/forms/Scores";
+
+export interface QuestionResponseType {
+  id: number;
+  responses: (AnswerType | undefined)[];
+}
 
 async function Responses({ formData }: { formData: FormType }) {
   const responseData = await prisma.response.findMany({
     where: { formId: formData.id },
-    include: { answers: true },
+    include: { answers: true, user: true },
   });
+  let counter = 0;
   const responses: ResponseType[] = responseData.map((res) => {
     return {
       ...res,
+      name: res.user?.name || `Anonymous ${++counter}`,
       answers: res.answers.map((answer) => {
         return answer.type === "multiple"
           ? {
@@ -57,7 +64,6 @@ async function Responses({ formData }: { formData: FormType }) {
     });
     return total > 0 ? Math.round((correct / total) * 1000) / 10 : 100;
   });
-  //FIXME: implement delete response
   const sorted = scores.sort((a, b) => a - b);
   const median =
     scores.length % 2 == 0
@@ -65,8 +71,6 @@ async function Responses({ formData }: { formData: FormType }) {
           (sorted[scores.length / 2] + sorted[scores.length / 2 - 1]) * 5,
         ) / 10
       : sorted[Math.floor(scores.length / 2)];
-
-  //TODO: tabs/dropdown for individual response and individual question view
 
   return (
     <div className="w-full lg:w-200 mt-8 flex flex-col gap-y-5">
@@ -138,87 +142,11 @@ async function Responses({ formData }: { formData: FormType }) {
           </div>
         </div>
       )}
-      {formData.questions.map((question, i) => {
-        const currentResponses = questionResponses.find(
-          (q) => q.id === question.id,
-        )!.responses;
-        const choices =
-          question.type === "multiple"
-            ? question.choices.map(
-                (c) =>
-                  currentResponses.filter(
-                    (r) => r && r.type === "multiple" && r.choices[0] === c.id,
-                  ).length,
-              )
-            : null;
-
-        return (
-          <div
-            key={question.id}
-            className="text-black dark:text-gray-300 border-gray-700 border-2 rounded p-5 w-full flex flex-col gap-y-3"
-          >
-            <div className="text-xs text-black dark:text-gray-300">
-              Question {i + 1}
-            </div>
-            <h2 className="text-black dark:text-white font-bold">
-              {question.title}
-            </h2>
-            {question.description && (
-              <p className="text-sm">{question.description}</p>
-            )}
-            <div className="text-xs">
-              {currentResponses.length} response
-              {currentResponses.length === 1 ? "" : "s"}
-            </div>
-            <div className="flex flex-col gap-y-2 max-h-50 overflow-auto">
-              {question.type === "text" &&
-                currentResponses.map((response) => {
-                  return response ? (
-                    <div
-                      key={response.id}
-                      className="bg-gray-300 dark:bg-gray-900 rounded px-3 py-1.5"
-                    >
-                      {response.type === "text" && response.text}
-                    </div>
-                  ) : null;
-                })}
-              {question.type === "multiple" &&
-                choices &&
-                question.choices.map((choice, i) => {
-                  const percent =
-                    currentResponses.length > 0
-                      ? Math.round(
-                          (choices[i] / currentResponses.length) * 1000,
-                        ) / 10
-                      : 0;
-
-                  return (
-                    <div
-                      key={choice.id}
-                      className="flex items-center border-2 relative overflow-hidden rounded py-1.5 px-3 border-gray-700"
-                    >
-                      <div
-                        className="bg-gray-300 dark:bg-gray-900 -z-1 absolute h-full top-0 left-0"
-                        style={{ width: percent + "%" }}
-                      />
-                      {choice.text}
-                      <div className="absolute right-3 flex gap-x-3 items-center text-xs">
-                        {choices[i]} response{choices[i] === 1 ? "" : "s"}
-                        <span className="text-base font-bold ml-2">
-                          {percent}%
-                        </span>
-                        {percent !== 0 &&
-                          Math.max(...choices) === choices[i] && (
-                            <FaCheckCircle size={17} title="Most picked" />
-                          )}
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
-          </div>
-        );
-      })}
+      <Response
+        formData={formData}
+        questionResponses={questionResponses}
+        responses={responses}
+      />
     </div>
   );
 }
