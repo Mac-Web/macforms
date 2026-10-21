@@ -60,7 +60,7 @@ async function Responses({ formData }: { formData: FormType }) {
         if (
           answer &&
           ((answer.type === "multiple" &&
-            question.correct!.includes(answer.choices[0])) ||
+            question.correct!.some((c) => answer.choices.includes(c))) ||
             (answer.type === "text" &&
               answer.text.trim().toLowerCase() ===
                 question.correct![0].trim().toLowerCase()))

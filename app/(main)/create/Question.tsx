@@ -204,6 +204,13 @@ function Question({
             setQuestion({ ...question, optional: !required })
           }
         />
+        {question.type === "multiple" && (
+          <Checkbox
+            text="Multiple selections"
+            checked={question.multiple || false}
+            setChecked={(multiple) => setQuestion({ ...question, multiple })}
+          />
+        )}
         {handleDelete && (
           <>
             <div

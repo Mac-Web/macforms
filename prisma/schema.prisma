@@ -121,6 +121,8 @@ model Question {
   title       String
   description String?
   optional    Boolean      @default(false)
+  multiple    Boolean      @default(false)
+  long        Boolean      @default(false)
   type        QuestionType
   correct     String?
   config      Json

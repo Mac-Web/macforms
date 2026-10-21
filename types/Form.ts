@@ -34,7 +34,7 @@ export interface ResponseType {
 export type QuestionTypeMap = {
   multiple: {
     choices: ChoiceType[];
-    multiple?: boolean; //FIXME: add multi select
+    multiple?: boolean; //FIXME: question is marked correct whenever just one option matches, check if its multiple has to match every correct option. or is it already fixed? idek the codebase is atrocious
   };
   text: {
     placeholder: string;

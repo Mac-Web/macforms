@@ -50,12 +50,17 @@ export async function getFormData(id: string): Promise<FormType | void> {
           .map((question) => {
             const { id, title, description, optional, type, config, correct } =
               question;
+            const multiple =
+              question.type === "multiple" ? question.multiple : undefined;
+            const long = question.type === "text" ? question.long : undefined;
             const base = {
               id,
               title,
               description: description || undefined,
               optional,
               correct: correct ? correct.split(",") : undefined,
+              multiple,
+              long,
             };
             const json = JSON.parse(config as string);
             return type === "multiple"

@@ -16,9 +16,19 @@ MacForms, an app under the [MacWeb](https://macweb.app) collection of online app
 - Response submission
 - Response editing
 - Create custom quizzes with correct answers
+- Create both public and private forms
+- Share and collaborate on forms with collaborators and guests
+- Create multiple choice, multiple select, short answer, and long answer questions
+- Customize form settings and presentation options
+- Bulk manage responses and edit data
+- Visualize responses, detailed information, and statistics
 - View quiz scores and accuracy
+- Browse and search public forms
+- Smooth, intuitive, and responsive UI
+- Light and dark mode support
+- Transition effects and animations
 - Cross domain auth using the main MacWeb auth & account system
-- More coming soon!
+- A lot more features for you to explore!
 
 ## Tech stack
 

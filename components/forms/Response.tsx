@@ -97,7 +97,8 @@ function Response({
             ? question.choices.map(
                 (c) =>
                   currentResponses.filter(
-                    (r) => r && r.type === "multiple" && r.choices[0] === c.id,
+                    (r) =>
+                      r && r.type === "multiple" && r.choices.includes(c.id),
                   ).length,
               )
             : null;
@@ -149,7 +150,7 @@ function Response({
                   return (
                     (!response ||
                       (currentResponses[0]!.type === "multiple" &&
-                        currentResponses[0]?.choices[0] === choice.id)) && (
+                        currentResponses[0]?.choices.includes(choice.id))) && (
                       <div
                         key={choice.id}
                         className={`flex items-center border-2 relative overflow-hidden rounded py-1.5 px-3 border-gray-700 ${response && "bg-gray-300 dark:bg-gray-900"}`}

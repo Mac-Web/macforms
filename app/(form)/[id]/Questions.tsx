@@ -11,6 +11,7 @@ import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
 import Choice from "@/components/ui/Choice";
 import Btn from "@/components/ui/Btn";
+import Textarea from "@/components/ui/Textarea";
 
 function shuffle(
   questions: QuestionType[],
@@ -310,22 +311,44 @@ function Questions({
                       )}
                     </div>
                     {question.type === "text" && answer.type === "text" && (
-                      <label className="px-3">
-                        <Input
-                          placeholder={question.placeholder}
-                          value={answer.text}
-                          setValue={(text) => {
-                            const answers = [...response.answers];
-                            const found =
-                              answers[
-                                answers.findIndex(
-                                  (a) => a.questionId === question.id,
-                                )
-                              ];
-                            if (found.type === "text") found.text = text;
-                            setResponse({ ...response, answers });
-                          }}
-                        />
+                      <label
+                        className="px-3"
+                        title={`This is a ${question.long ? "long" : "short"} answer question`}
+                      >
+                        {question.long ? (
+                          <Textarea
+                            placeholder={question.placeholder}
+                            value={answer.text}
+                            setValue={(text) => {
+                              const answers = [...response.answers];
+                              const found =
+                                answers[
+                                  answers.findIndex(
+                                    (a) => a.questionId === question.id,
+                                  )
+                                ];
+                              if (found.type === "text") found.text = text;
+                              setResponse({ ...response, answers });
+                            }}
+                            styles="w-full!"
+                          />
+                        ) : (
+                          <Input
+                            placeholder={question.placeholder}
+                            value={answer.text}
+                            setValue={(text) => {
+                              const answers = [...response.answers];
+                              const found =
+                                answers[
+                                  answers.findIndex(
+                                    (a) => a.questionId === question.id,
+                                  )
+                                ];
+                              if (found.type === "text") found.text = text;
+                              setResponse({ ...response, answers });
+                            }}
+                          />
+                        )}
                       </label>
                     )}
                     {question.type === "multiple" &&

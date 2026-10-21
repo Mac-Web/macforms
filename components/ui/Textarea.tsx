@@ -14,7 +14,7 @@ function Textarea({ placeholder, value, setValue, styles }: TextareaProps) {
       value={value}
       onChange={(e) => setValue(e.target.value)}
       className={`rounded bg-gray-300 dark:bg-gray-900 flex items-center relative outline-none border-none
-         text-black dark:text-white text-[18px] px-3 py-1.5 resize-y ${styles}`}
+         text-black dark:text-white text-[18px] px-3 py-1.5 resize-y min-h-20 ${styles}`}
     ></textarea>
   );
 }

@@ -25,6 +25,11 @@ export default async function Home() {
           primary
         />
         <Btn
+          text="Guest mode"
+          link={`${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?redirect=macforms`}
+          primary
+        />
+        <Btn
           text="Learn more"
           link="https://github.com/Mac-Web/macforms" //TODO: change to actual macweb.app/apps/macforms url
           styles="py-1.5"

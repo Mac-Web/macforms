@@ -18,12 +18,16 @@ export async function createForm(formData: FormType) {
           questions: {
             create: formData.questions.map((q) => {
               const { title, description, optional, type, correct } = q;
+              const multiple = q.type === "multiple" ? q.multiple : undefined;
+              const long = q.type === "text" ? q.long : undefined;
               return {
                 title,
                 description,
                 optional,
                 type,
                 correct: correct ? correct.join(",") : undefined,
+                multiple,
+                long,
                 config:
                   type === "text"
                     ? JSON.stringify({ placeholder: q.placeholder })
@@ -72,12 +76,16 @@ export async function editForm(formData: FormType, auto?: boolean) {
             deleteMany: { id: { notIn: formData.questions.map((q) => q.id) } },
             upsert: formData.questions.map((q) => {
               const { id, title, description, optional, type, correct } = q;
+              const multiple = q.type === "multiple" ? q.multiple : undefined;
+              const long = q.type === "text" ? q.long : undefined;
               const base = {
                 title,
                 description,
                 optional,
                 type,
                 correct: correct ? correct.join(",") : null,
+                multiple,
+                long,
                 config:
                   type === "text"
                     ? JSON.stringify({ placeholder: q.placeholder })
