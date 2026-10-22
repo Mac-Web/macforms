@@ -1,3 +1,5 @@
+**For the shipwright: no part of this project was AI used in any way, 100% of the code is hand written by me, you can double check my hackatime data to verify**
+
 # [MacForms](https://macforms.macweb.app)
 
 ![Next.js](https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js)
